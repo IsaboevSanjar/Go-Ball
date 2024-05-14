@@ -1,8 +1,7 @@
-package goball.uz
+package goball.uz.network
 
 import com.chuckerteam.chucker.api.ChuckerInterceptor
 import goball.uz.app.App
-import goball.uz.data.Api
 import okhttp3.Interceptor
 import okhttp3.OkHttpClient
 import okhttp3.Request

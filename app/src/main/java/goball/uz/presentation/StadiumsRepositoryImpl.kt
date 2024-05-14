@@ -1,6 +1,8 @@
-package goball.uz.data
+package goball.uz.presentation
 
-import goball.uz.data.models.StadiumListItem
+import goball.uz.helper.Result
+import goball.uz.models.staium.StadiumListItem
+import goball.uz.network.Api
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import retrofit2.HttpException

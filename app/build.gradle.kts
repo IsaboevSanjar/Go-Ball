@@ -98,4 +98,13 @@ dependencies {
 
     // Extended Icons
     implementation("androidx.compose.material:material-icons-extended:1.5.4")
+
+
+    val voyagerVersion = "1.0.0"
+    // Navigator
+    implementation("cafe.adriel.voyager:voyager-navigator:$voyagerVersion")
+    // TabNavigator
+    implementation("cafe.adriel.voyager:voyager-tab-navigator:$voyagerVersion")
+    // Transitions
+    implementation("cafe.adriel.voyager:voyager-transitions:$voyagerVersion")
 }

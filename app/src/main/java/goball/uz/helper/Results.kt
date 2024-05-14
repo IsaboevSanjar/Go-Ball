@@ -1,4 +1,4 @@
-package goball.uz.data
+package goball.uz.helper
 
 sealed class Result<T>(
     val data: T? = null,

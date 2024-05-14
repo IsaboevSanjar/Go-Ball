@@ -2,9 +2,8 @@ package goball.uz.presentation
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import goball.uz.data.StadiumsRepository
-import goball.uz.data.Result
-import goball.uz.data.models.StadiumListItem
+import goball.uz.helper.Result
+import goball.uz.models.staium.StadiumListItem
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow

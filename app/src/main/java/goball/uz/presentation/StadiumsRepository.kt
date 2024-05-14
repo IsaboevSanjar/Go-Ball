@@ -1,6 +1,7 @@
-package goball.uz.data
+package goball.uz.presentation
 
-import goball.uz.data.models.StadiumListItem
+import goball.uz.helper.Result
+import goball.uz.models.staium.StadiumListItem
 import kotlinx.coroutines.flow.Flow
 
 interface StadiumsRepository {

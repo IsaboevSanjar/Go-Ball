@@ -1,4 +1,4 @@
-package goball.uz.data.models
+package goball.uz.models.staium
 
 data class StadiumListItem(
     val capacity: Int,

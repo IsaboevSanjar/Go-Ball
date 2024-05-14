@@ -1,3 +1,3 @@
-package goball.uz.data.models
+package goball.uz.models.staium
 
 class StadiumList : ArrayList<StadiumListItem>()

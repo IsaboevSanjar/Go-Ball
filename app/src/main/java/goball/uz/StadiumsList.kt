@@ -42,8 +42,8 @@ import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import coil.size.Size
-import goball.uz.data.Api
-import goball.uz.data.models.StadiumListItem
+import goball.uz.network.Api
+import goball.uz.models.staium.StadiumListItem
 import goball.uz.ui.elements.RatingBar
 
 

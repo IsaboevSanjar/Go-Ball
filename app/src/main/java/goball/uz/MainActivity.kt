@@ -22,8 +22,8 @@ import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.rememberCameraPositionState
-import goball.uz.data.StadiumsRepositoryImpl
-import goball.uz.data.models.StadiumListItem
+import goball.uz.presentation.StadiumsRepositoryImpl
+import goball.uz.network.RetrofitInstance
 import goball.uz.presentation.StadiumsViewModel
 import goball.uz.ui.theme.GoBallTheme
 import kotlinx.coroutines.flow.collectLatest
