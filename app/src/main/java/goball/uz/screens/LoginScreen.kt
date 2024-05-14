@@ -1,5 +1,6 @@
 package goball.uz.screens
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,6 +15,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.ClickableText
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ElevatedButton
@@ -28,7 +30,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
+import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontFamily
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -56,14 +63,21 @@ class LoginScreen : Screen {
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             Spacer(modifier = Modifier.height(50.dp))
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
                 Text(text = "Kodni kiriting", style = MaterialTheme.typography.headlineMedium)
                 Spacer(modifier = Modifier.height(20.dp))
-                Row {
-                    Text(
-                        text = "@go_ballbot",
-                        color = colorResource(id = R.color.primary),
-                        style = MaterialTheme.typography.titleMedium
+                Row (verticalAlignment = Alignment.CenterVertically){
+                    ClickableText(
+                        onClick = { offset ->
+                            println("You clicked on offset $offset")
+                            Log.d("TAGG", "You clicked on offset $offset")
+                        },
+                        text =buildAnnotatedString {
+                            withStyle(style = SpanStyle(color = Color.Green,
+                                fontSize = 17.sp,fontWeight = FontWeight.Bold), ) {
+                                append("@go_ballbot")
+                            }
+                        }
                     )
                     Text(
                         text = " telegram botga kiring",
