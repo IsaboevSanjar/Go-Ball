@@ -69,9 +69,6 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-
-                    //StadiumsList(context = this)
-                    val productList = viewModel.products.collectAsState().value
                     val stadiumList = viewModel.stadiums.collectAsState().value
                     LaunchedEffect(key1 = viewModel.showErrorToastChannel) {
                         viewModel.showErrorToastChannel.collectLatest { show ->
@@ -82,25 +79,6 @@ class MainActivity : ComponentActivity() {
                             }
                         }
                     }
-                    /*if (productList.isEmpty()) {
-                        Box(
-                            modifier = Modifier.fillMaxSize(),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            CircularProgressIndicator()
-                        }
-                    } else {
-                        LazyColumn(
-                            modifier = Modifier.fillMaxSize(),
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            contentPadding = PaddingValues(16.dp)
-                        ) {
-                            items(productList.size) { index ->
-                                Product(productList[index])
-                                Spacer(modifier = Modifier.height(16.dp))
-                            }
-                        }
-                    }*/
                     if (stadiumList.isEmpty()) {
                         Box(
                             modifier = Modifier.fillMaxSize(),
@@ -110,78 +88,12 @@ class MainActivity : ComponentActivity() {
                         }
                     } else {
                         StadiumsList(context = this, stadiums = stadiumList, size = stadiumList.size)
-                       /* LazyColumn(
-                            modifier = Modifier.fillMaxSize(),
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            contentPadding = PaddingValues(16.dp)
-                        ) {
-                            items(stadiumList.size) { index ->
-                                val length=stadiumList.size
-                                StadiumsList(this@MainActivity,stadiumList[index],length)
-                                Spacer(modifier = Modifier.height(16.dp))
-                            }
-                        }*/
                     }
                 }
             }
         }
     }
 }
-
-@Composable
-fun Product(stadium: StadiumListItem) {
-    val imageState = rememberAsyncImagePainter(
-        model = ImageRequest.Builder(LocalContext.current)
-            .data(Api.URL_STADIUM + stadium.image)
-            .size(Size.ORIGINAL).build()
-    ).state
-
-    Column(
-        modifier = Modifier
-            .clip(RoundedCornerShape(20.dp))
-            .height(300.dp)
-            .fillMaxWidth()
-            .background(MaterialTheme.colorScheme.primaryContainer)
-    ) {
-
-        if (imageState is AsyncImagePainter.State.Error) {
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(200.dp),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator()
-            }
-        }
-
-        if (imageState is AsyncImagePainter.State.Success) {
-            Image(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(200.dp),
-                painter = imageState.painter,
-                contentDescription = stadium.name,
-                contentScale = ContentScale.Crop
-            )
-        }
-
-        Spacer(modifier = Modifier.height(6.dp))
-
-        Text(
-            modifier = Modifier.padding(horizontal = 16.dp),
-            text = "${stadium.name} -- Price: ${stadium.price}$",
-            fontSize = 17.sp,
-            fontWeight = FontWeight.SemiBold
-        )
-
-        Spacer(modifier = Modifier.height(6.dp))
-
-
-    }
-}
-
-
 @Composable
 fun MapScreen() {
     val atasehir = LatLng(40.9971, 29.1007)
