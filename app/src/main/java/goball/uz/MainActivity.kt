@@ -1,5 +1,6 @@
 package goball.uz
 
+import android.content.Context
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
@@ -22,6 +23,7 @@ import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.rememberCameraPositionState
 import goball.uz.data.StadiumsRepositoryImpl
+import goball.uz.data.models.StadiumListItem
 import goball.uz.presentation.StadiumsViewModel
 import goball.uz.ui.theme.GoBallTheme
 import kotlinx.coroutines.flow.collectLatest
@@ -46,31 +48,38 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    val stadiumList = viewModel.stadiums.collectAsState().value
-                    LaunchedEffect(key1 = viewModel.showErrorToastChannel) {
-                        viewModel.showErrorToastChannel.collectLatest { show ->
-                            if (show) {
-                                Toast.makeText(
-                                    this@MainActivity, "Error", Toast.LENGTH_SHORT
-                                ).show()
-                            }
-                        }
-                    }
-                    if (stadiumList.isEmpty()) {
-                        Box(
-                            modifier = Modifier.fillMaxSize(),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            CircularProgressIndicator()
-                        }
-                    } else {
-                        StadiumsList(context = this, stadiums = stadiumList, size = stadiumList.size)
-                    }
+                    StadiumLists(context = this, viewModel = viewModel)
                 }
             }
         }
     }
 }
+
+@Composable
+fun StadiumLists(context: Context, viewModel: StadiumsViewModel) {
+    val stadiumList = viewModel.stadiums.collectAsState().value
+
+    LaunchedEffect(key1 = viewModel.showErrorToastChannel) {
+        viewModel.showErrorToastChannel.collectLatest { show ->
+            if (show) {
+                Toast.makeText(
+                    context, "Error", Toast.LENGTH_SHORT
+                ).show()
+            }
+        }
+    }
+    if (stadiumList.isEmpty()) {
+        Box(
+            modifier = Modifier.fillMaxSize(),
+            contentAlignment = Alignment.Center
+        ) {
+            CircularProgressIndicator()
+        }
+    } else {
+        StadiumsList(context = context, stadiums = stadiumList)
+    }
+}
+
 @Composable
 fun MapScreen() {
     val atasehir = LatLng(40.9971, 29.1007)

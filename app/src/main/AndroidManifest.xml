@@ -17,8 +17,8 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.GoBall"
         tools:targetApi="31">
-        <!--<meta-data android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyAK_Uhyr_V90xkY7KQ8U5qjAAXJb3hi2Nw"/>-->
+        <meta-data android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyAK_Uhyr_V90xkY7KQ8U5qjAAXJb3hi2Nw"/>
         <activity
             android:name=".MainActivity"
             android:exported="true"

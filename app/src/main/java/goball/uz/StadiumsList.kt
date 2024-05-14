@@ -48,7 +48,7 @@ import goball.uz.ui.elements.RatingBar
 
 
 @Composable
-fun StadiumsList(context: Context, stadiums: List<StadiumListItem>, size: Int) {
+fun StadiumsList(context: Context, stadiums: List<StadiumListItem>) {
     var rating_1 by remember {
         mutableDoubleStateOf(3.5)
     }
