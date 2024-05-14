@@ -36,7 +36,7 @@ object RetrofitInstance {
 
     val api: Api = Retrofit.Builder()
         .addConverterFactory(GsonConverterFactory.create())
-        .baseUrl(Api.URL_STADIUM)
+        .baseUrl(Api.BASE_URL)
         .client(client)
         .build()
         .create(Api::class.java)

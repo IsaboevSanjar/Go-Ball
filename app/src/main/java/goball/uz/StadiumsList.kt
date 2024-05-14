@@ -37,14 +37,12 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImagePainter
 import coil.compose.rememberAsyncImagePainter
 import coil.request.ImageRequest
 import coil.size.Size
 import goball.uz.data.Api
-import goball.uz.data.models.StadiumList
 import goball.uz.data.models.StadiumListItem
 import goball.uz.ui.elements.RatingBar
 
@@ -88,7 +86,7 @@ fun StadiumsList(context: Context, stadiums: List<StadiumListItem>, size: Int) {
                 items((stadiums)) { stadium ->
                     val imageState = rememberAsyncImagePainter(
                         model = ImageRequest.Builder(LocalContext.current)
-                            .data(Api.URL_STADIUM + stadium.image)
+                            .data(Api.BASE_URL + stadium.image)
                             .size(Size.ORIGINAL).build()
                     ).state
                     Card(
