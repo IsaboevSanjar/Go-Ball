@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
+import cafe.adriel.voyager.navigator.Navigator
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
@@ -25,6 +26,7 @@ import com.google.maps.android.compose.rememberCameraPositionState
 import goball.uz.presentation.StadiumsRepositoryImpl
 import goball.uz.network.RetrofitInstance
 import goball.uz.presentation.StadiumsViewModel
+import goball.uz.screens.LoginScreen
 import goball.uz.ui.theme.GoBallTheme
 import kotlinx.coroutines.flow.collectLatest
 
@@ -48,7 +50,8 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    StadiumLists(context = this, viewModel = viewModel)
+                    Navigator(screen = LoginScreen())
+                    //StadiumLists(context = this, viewModel = viewModel)
                 }
             }
         }
