@@ -49,9 +49,7 @@ import goball.uz.ui.elements.RatingBar
 
 @Composable
 fun StadiumsList(context: Context, stadiums: List<StadiumListItem>) {
-    var rating_1 by remember {
-        mutableDoubleStateOf(3.5)
-    }
+
     Text(
         text = "Sizga eng yaqin stadionlar soni 24", textAlign = TextAlign.Center,
         fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.background,
