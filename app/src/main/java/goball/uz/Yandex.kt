@@ -6,6 +6,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import com.yandex.mapkit.MapKitFactory
+import com.yandex.mapkit.geometry.Point
+import com.yandex.mapkit.map.CameraPosition
 import com.yandex.mapkit.mapview.MapView
 
 class Yandex : AppCompatActivity() {
@@ -22,7 +24,16 @@ class Yandex : AppCompatActivity() {
             insets
         }
         mapView = findViewById(R.id.mapview)
+        mapView.mapWindow.map.move(
+            CameraPosition(
+                Point(41.2995, 69.2401),
+                13.0f,
+                150.0f,
+                30.0f
+            )
+        )
     }
+
     override fun onStart() {
         super.onStart()
         MapKitFactory.getInstance().onStart()
