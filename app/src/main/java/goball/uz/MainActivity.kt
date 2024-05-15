@@ -27,6 +27,7 @@ import goball.uz.presentation.StadiumsRepositoryImpl
 import goball.uz.network.RetrofitInstance
 import goball.uz.presentation.StadiumsViewModel
 import goball.uz.screens.LoginScreen
+import goball.uz.screens.StartScreen
 import goball.uz.ui.theme.GoBallTheme
 import kotlinx.coroutines.flow.collectLatest
 
@@ -50,7 +51,7 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Navigator(screen = LoginScreen())
+                    Navigator(screen = StartScreen())
                     //StadiumLists(context = this, viewModel = viewModel)
                 }
             }

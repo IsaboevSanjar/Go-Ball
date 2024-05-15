@@ -1,6 +1,9 @@
 package goball.uz.screens
 
+import android.content.Intent
+import android.net.Uri
 import android.util.Log
+import androidx.activity.ComponentActivity
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -42,6 +45,7 @@ import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.input.key.type
 import androidx.compose.ui.platform.ClipboardManager
 import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
@@ -64,7 +68,7 @@ import goball.uz.ui.theme.fontBold
 class StartScreen : Screen {
     @Composable
     override fun Content() {
-
+        val context = LocalContext.current
         val navigator = LocalNavigator.current
 
         Column(
@@ -98,8 +102,13 @@ class StartScreen : Screen {
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 17.dp),
-                onClick = {/* navigator?.push(MainScreen())*/
-
+                onClick = {
+                    val browserIntent = Intent(
+                        Intent.ACTION_VIEW,
+                        Uri.parse("https://t.me/mystadium_bot")
+                    )
+                    //context.startActivity(browserIntent)
+                    navigator?.push(LoginScreen())
                 },
                 shape = RoundedCornerShape(8.dp),
                 colors = ButtonDefaults.buttonColors(
