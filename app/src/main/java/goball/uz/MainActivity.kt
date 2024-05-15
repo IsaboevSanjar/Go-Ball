@@ -23,6 +23,8 @@ import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.rememberCameraPositionState
+import com.yandex.mapkit.MapKitFactory
+import com.yandex.mapkit.mapview.MapView
 import goball.uz.presentation.StadiumsRepositoryImpl
 import goball.uz.network.RetrofitInstance
 import goball.uz.presentation.StadiumsViewModel
@@ -44,6 +46,7 @@ class MainActivity : ComponentActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        MapKitFactory.setApiKey("42c1c9b7-5b9f-4fc3-92f0-efcc45ec8dd6")
         setContent {
             GoBallTheme {
                 // A surface container using the 'background' color from the theme
@@ -56,6 +59,7 @@ class MainActivity : ComponentActivity() {
                 }
             }
         }
+
     }
 }
 

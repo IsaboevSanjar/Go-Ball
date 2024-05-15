@@ -24,8 +24,8 @@ class MainScreen : Screen {
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
+        }
             Text(text = "Main page")
             Spacer(modifier = Modifier.height(50.dp))
         }
-    }
 }
