@@ -2,6 +2,7 @@ package goball.uz.screens
 
 import android.util.Log
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -33,6 +34,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.key.KeyEventType
+import androidx.compose.ui.input.key.*
+import androidx.compose.ui.input.key.onKeyEvent
+import androidx.compose.ui.input.key.type
 import androidx.compose.ui.platform.ClipboardManager
 import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.res.colorResource
@@ -63,13 +68,23 @@ class LoginScreen : Screen {
         var otpText by remember {
             mutableStateOf("")
         }
+        var addedText by remember {
+            mutableStateOf("")
+        }
+        if (otpText.length > 4) {
+            otpText = ""
+        }
         var loading by remember {
             mutableStateOf(false)
         }
-        val text by remember {
-            mutableStateOf(
-                clipboardManager.getText()?.text
-            )
+        LaunchedEffect(Unit) {
+            clipboardManager.getText()?.text?.let {
+                if (it.length == 4 && it.isDigitsOnly()) {
+                    otpText = it
+                    loading = !loading
+                }
+            }
+            focusRequester.requestFocus()
         }
 
         Column(
@@ -110,13 +125,24 @@ class LoginScreen : Screen {
                 }
                 Spacer(modifier = Modifier.height(20.dp))
                 BasicTextField(
-                    modifier = Modifier.focusRequester(focusRequester),
+
+                    modifier = Modifier
+                        .focusRequester(focusRequester)
+                        .onKeyEvent { event ->
+                            if (event.type == KeyEventType.KeyUp && event.key == Key.Backspace) {
+                                if (addedText.isEmpty() && otpText.isNotEmpty()) {
+                                    otpText = addedText
+                                }
+                            }
+                            false
+                        },
                     value = otpText,
                     onValueChange = { newText ->
                         // Ensure new text only contains digits (0-9)
                         val filteredText = newText.filter { it.isDigit() }
-                        if (filteredText.length <= 4) {
+                        if (filteredText.length <= 4 || otpText.isNotEmpty()) {
                             otpText = filteredText
+                            addedText = filteredText
                         }
                     },
                     singleLine = true, // Prevent line breaks within the text field
@@ -136,13 +162,14 @@ class LoginScreen : Screen {
                             ) {
                                 Text(
                                     text = number,
-                                    style = MaterialTheme.typography.titleMedium
+                                    style = MaterialTheme.typography.headlineMedium
                                 )
                                 Box(
                                     modifier = Modifier
                                         .width(40.dp)
                                         .height(2.dp)
                                         .background(Color.Black)
+
                                 )
                             }
 
@@ -150,15 +177,7 @@ class LoginScreen : Screen {
                     }
                 }
             }
-            LaunchedEffect(Unit) {
-                clipboardManager.getText()?.text?.let {
-                    if (it.length == 4 && it.isDigitsOnly()) {
-                        otpText = it
-                        loading = !loading
-                    }
-                }
-                focusRequester.requestFocus()
-            }
+
             ElevatedButton(
                 modifier = Modifier
                     .fillMaxWidth()
