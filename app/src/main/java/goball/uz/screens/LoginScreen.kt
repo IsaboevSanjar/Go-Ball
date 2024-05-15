@@ -16,29 +16,37 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.ClickableText
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.ClipboardManager
+import androidx.compose.ui.platform.LocalClipboardManager
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.text.isDigitsOnly
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import goball.uz.R
@@ -48,11 +56,20 @@ class LoginScreen : Screen {
     override fun Content() {
 
         val navigator = LocalNavigator.current
+        val clipboardManager: ClipboardManager = LocalClipboardManager.current
+
+
+        val focusRequester = remember { FocusRequester() }
         var otpText by remember {
             mutableStateOf("")
         }
         var loading by remember {
             mutableStateOf(false)
+        }
+        val text by remember {
+            mutableStateOf(
+                clipboardManager.getText()?.text
+            )
         }
 
         Column(
@@ -63,18 +80,25 @@ class LoginScreen : Screen {
             verticalArrangement = Arrangement.SpaceBetween
         ) {
             Spacer(modifier = Modifier.height(50.dp))
-            Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.Center) {
+            Column(
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.Center
+            ) {
                 Text(text = "Kodni kiriting", style = MaterialTheme.typography.headlineMedium)
                 Spacer(modifier = Modifier.height(20.dp))
-                Row (verticalAlignment = Alignment.CenterVertically){
+                Row(verticalAlignment = Alignment.CenterVertically) {
                     ClickableText(
                         onClick = { offset ->
                             println("You clicked on offset $offset")
                             Log.d("TAGG", "You clicked on offset $offset")
                         },
-                        text =buildAnnotatedString {
-                            withStyle(style = SpanStyle(color = Color.Green,
-                                fontSize = 17.sp,fontWeight = FontWeight.Bold), ) {
+                        text = buildAnnotatedString {
+                            withStyle(
+                                style = SpanStyle(
+                                    color = Color.Green,
+                                    fontSize = 17.sp, fontWeight = FontWeight.Bold
+                                ),
+                            ) {
                                 append("@go_ballbot")
                             }
                         }
@@ -86,6 +110,7 @@ class LoginScreen : Screen {
                 }
                 Spacer(modifier = Modifier.height(20.dp))
                 BasicTextField(
+                    modifier = Modifier.focusRequester(focusRequester),
                     value = otpText,
                     onValueChange = { newText ->
                         // Ensure new text only contains digits (0-9)
@@ -94,7 +119,8 @@ class LoginScreen : Screen {
                             otpText = filteredText
                         }
                     },
-                    singleLine = true // Prevent line breaks within the text field
+                    singleLine = true, // Prevent line breaks within the text field
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                 ) {
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(10.dp),
@@ -124,11 +150,21 @@ class LoginScreen : Screen {
                     }
                 }
             }
+            LaunchedEffect(Unit) {
+                clipboardManager.getText()?.text?.let {
+                    if (it.length == 4 && it.isDigitsOnly()) {
+                        otpText = it
+                        loading = !loading
+                    }
+                }
+                focusRequester.requestFocus()
+            }
             ElevatedButton(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 17.dp),
-                onClick = {/* navigator?.push(MainScreen())*/loading = !loading },
+                onClick = {/* navigator?.push(MainScreen())*/loading = !loading
+                },
                 shape = RoundedCornerShape(8.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = colorResource(id = R.color.primary),
