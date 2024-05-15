@@ -63,7 +63,9 @@ class LoginScreen : Screen {
 
         val navigator = LocalNavigator.current
         val clipboardManager: ClipboardManager = LocalClipboardManager.current
-
+        var success by remember {
+            mutableStateOf(true)
+        }
 
         val focusRequester = remember { FocusRequester() }
         var otpText by remember {
@@ -183,6 +185,14 @@ class LoginScreen : Screen {
 
                         }
                     }
+
+                }
+                if (!success){
+                    Text(
+                        text = "kod noto'g'ri",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = Color.Red
+                    )
                 }
             }
 
