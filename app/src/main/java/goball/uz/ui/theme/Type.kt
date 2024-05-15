@@ -12,6 +12,9 @@ import goball.uz.R
 val fonts = FontFamily(
     Font(R.font.jakarta_regular)
 )
+val fontBold = FontFamily(
+    Font(R.font.jakarta_extrabold, FontWeight.Bold)
+)
 
 // Set of Material typography styles to start with
 val Typography = Typography(
@@ -28,8 +31,8 @@ val Typography = Typography(
         fontSize = 18.sp
     ),
     headlineMedium = TextStyle(
-        fontFamily = fonts,
-        fontWeight = FontWeight.Normal,
+        fontFamily = fontBold,
+        fontWeight = FontWeight.Bold,
         fontSize = 20.sp
     ),
     bodySmall = TextStyle(
@@ -41,7 +44,8 @@ val Typography = Typography(
         fontFamily = fonts,
         fontWeight = FontWeight.Normal,
         fontSize = 16.sp
-    )
+    ),
+
     /* Other default text styles to override
     titleLarge = TextStyle(
         fontFamily = FontFamily.Default,

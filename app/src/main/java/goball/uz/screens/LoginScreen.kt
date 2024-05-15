@@ -55,6 +55,7 @@ import androidx.core.text.isDigitsOnly
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import goball.uz.R
+import goball.uz.ui.theme.fontBold
 
 class LoginScreen : Screen {
     @Composable
@@ -99,7 +100,7 @@ class LoginScreen : Screen {
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-                Text(text = "Kodni kiriting", style = MaterialTheme.typography.headlineMedium)
+                Text(text = "Kodni kiriting", fontFamily = fontBold, fontSize = 24.sp)
                 Spacer(modifier = Modifier.height(20.dp))
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     ClickableText(
@@ -123,7 +124,7 @@ class LoginScreen : Screen {
                         style = MaterialTheme.typography.titleMedium
                     )
                 }
-                Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(40.dp))
                 BasicTextField(
 
                     modifier = Modifier
@@ -149,7 +150,7 @@ class LoginScreen : Screen {
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number)
                 ) {
                     Row(
-                        horizontalArrangement = Arrangement.spacedBy(10.dp),
+                        horizontalArrangement = Arrangement.spacedBy(15.dp),
                         modifier = Modifier.height(50.dp)
                     ) {
                         repeat(4) { index ->
@@ -160,17 +161,23 @@ class LoginScreen : Screen {
                                 verticalArrangement = Arrangement.spacedBy(6.dp),
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
-                                Text(
-                                    text = number,
-                                    style = MaterialTheme.typography.headlineMedium
-                                )
+
                                 Box(
                                     modifier = Modifier
-                                        .width(40.dp)
-                                        .height(2.dp)
-                                        .background(Color.Black)
-
-                                )
+                                        .height(80.dp)
+                                        .width(50.dp)
+                                        .background(
+                                            Color.LightGray,
+                                            shape = RoundedCornerShape(7.dp)
+                                        ),
+                                    contentAlignment = Alignment.Center // This centers the content inside the Box
+                                ) {
+                                    Text(
+                                        text = number,
+                                        style = MaterialTheme.typography.headlineMedium,
+                                        fontSize = 20.sp // Adjust this as needed for better readability
+                                    )
+                                }
                             }
 
                         }
@@ -189,7 +196,7 @@ class LoginScreen : Screen {
                     containerColor = colorResource(id = R.color.primary),
                     contentColor = Color.White
                 ),
-                contentPadding = PaddingValues(vertical = 17.dp)
+                contentPadding = PaddingValues(vertical = 16.dp)
             ) {
                 if (!loading) {
                     Text(text = "Tasdiqlash", style = MaterialTheme.typography.titleMedium)
