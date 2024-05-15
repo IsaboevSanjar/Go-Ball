@@ -175,7 +175,8 @@ class LoginScreen : Screen {
                                     Text(
                                         text = number,
                                         style = MaterialTheme.typography.headlineMedium,
-                                        fontSize = 20.sp // Adjust this as needed for better readability
+                                        fontSize = 20.sp, // Adjust this as needed for better readability
+                                        color = Color.Black
                                     )
                                 }
                             }
