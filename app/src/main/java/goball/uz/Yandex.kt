@@ -1,6 +1,7 @@
 package goball.uz
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -8,10 +9,23 @@ import androidx.core.view.WindowInsetsCompat
 import com.yandex.mapkit.MapKitFactory
 import com.yandex.mapkit.geometry.Point
 import com.yandex.mapkit.map.CameraPosition
+import com.yandex.mapkit.map.MapObjectTapListener
 import com.yandex.mapkit.mapview.MapView
+import com.yandex.runtime.image.ImageProvider
 
 class Yandex : AppCompatActivity() {
     private lateinit var mapView: MapView
+    private val placeMarkTapListener = MapObjectTapListener { _, point ->
+        Toast.makeText(
+            this@Yandex,
+            "Tapped the point (${point.longitude}, ${point.latitude})",
+            Toast.LENGTH_SHORT
+        ).show()
+        true
+    }
+    private val lat=41.2995
+    private val long=69.2401
+
     override fun onCreate(savedInstanceState: Bundle?) {
         MapKitFactory.setApiKey("42c1c9b7-5b9f-4fc3-92f0-efcc45ec8dd6")
         super.onCreate(savedInstanceState)
@@ -24,9 +38,20 @@ class Yandex : AppCompatActivity() {
             insets
         }
         mapView = findViewById(R.id.mapview)
+        showMap(mapView)
+        val imageProvider = ImageProvider.fromResource(this, R.drawable.price_green)
+        val placeMark = mapView.mapWindow.map.mapObjects.addPlacemark().apply {
+            geometry = Point(lat, long)
+            setIcon(imageProvider)
+        }
+        placeMark.addTapListener(placeMarkTapListener)
+
+    }
+
+    private fun showMap(mapView: MapView) {
         mapView.mapWindow.map.move(
             CameraPosition(
-                Point(41.2995, 69.2401),
+                Point(lat, long),
                 13.0f,
                 0.0f,
                 30.0f

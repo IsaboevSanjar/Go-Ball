@@ -1,9 +1,11 @@
 package goball.uz.presentation
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import goball.uz.helper.Result
+import goball.uz.models.TgToken
 import goball.uz.models.staium.StadiumListItem
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -42,4 +44,28 @@ class StadiumsViewModel
             }
         }
     }
+
+    fun loginWithTelegram(code: Int) {
+        viewModelScope.launch {
+            repository.loginWithTelegram(code).collectLatest { result ->
+                when (result) {
+                    is Result.Error -> {
+                        _showErrorChannel.send(true)
+                    }
+
+                    is Result.Success -> {
+                        handleLoginSuccess(result.data)
+                    }
+                }
+            }
+        }
+    }
+
+    private fun handleLoginSuccess(token: TgToken?) {
+        // Handle the successful login response here, such as saving the token locally or navigating to another screen.
+        if (token?.token?.access_token?.isNotEmpty() == true) {
+            Log.d("TELEGRAMLOGIN", "handleLoginSuccess: ${token.token.access_token}")
+        }
+    }
+
 }

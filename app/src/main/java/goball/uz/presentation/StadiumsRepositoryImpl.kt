@@ -1,6 +1,8 @@
 package goball.uz.presentation
 
 import goball.uz.helper.Result
+import goball.uz.models.PasscodeRequest
+import goball.uz.models.TgToken
 import goball.uz.models.staium.StadiumListItem
 import goball.uz.network.Api
 import kotlinx.coroutines.flow.Flow
@@ -13,7 +15,7 @@ class StadiumsRepositoryImpl @Inject constructor(private val api: Api) : Stadium
 
     override suspend fun getStadiumsList(): Flow<Result<List<StadiumListItem>>> {
         return flow {
-            val productsFromApi = try {
+            val stadiumsFromApi = try {
                 api.getAllStadiums()
 
             } catch (e: IOException) {
@@ -30,7 +32,28 @@ class StadiumsRepositoryImpl @Inject constructor(private val api: Api) : Stadium
                 return@flow
             }
 
-            emit(Result.Success(productsFromApi))
+            emit(Result.Success(stadiumsFromApi))
+        }
+    }
+
+    override suspend fun loginWithTelegram(code: Int): Flow<Result<TgToken>> {
+        return flow {
+            val login=try {
+                api.loginTelegram(PasscodeRequest(code))
+            }catch (e: IOException) {
+                e.printStackTrace()
+                emit(Result.Error(message = "Error loading products"))
+                return@flow
+            } catch (e: HttpException) {
+                e.printStackTrace()
+                emit(Result.Error(message = "Error loading products"))
+                return@flow
+            } catch (e: Exception) {
+                e.printStackTrace()
+                emit(Result.Error(message = "Error loading products"))
+                return@flow
+            }
+            emit(Result.Success(login))
         }
     }
 }

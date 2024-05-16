@@ -5,7 +5,6 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.activity.viewModels
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.CircularProgressIndicator
@@ -18,19 +17,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
 import cafe.adriel.voyager.navigator.Navigator
 import com.google.android.gms.maps.model.CameraPosition
 import com.google.android.gms.maps.model.LatLng
 import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.yandex.mapkit.MapKitFactory
-import com.yandex.mapkit.mapview.MapView
 import dagger.hilt.android.AndroidEntryPoint
-import goball.uz.presentation.StadiumsRepositoryImpl
-import goball.uz.network.RetrofitInstance
 import goball.uz.presentation.StadiumsViewModel
-import goball.uz.screens.LoginScreen
 import goball.uz.screens.StartScreen
 import goball.uz.ui.theme.GoBallTheme
 import kotlinx.coroutines.flow.collectLatest
@@ -59,8 +53,8 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    //Navigator(screen = StartScreen())
-                    StadiumLists(context = this, viewModel = viewModel)
+                    Navigator(screen = StartScreen())
+                    //StadiumLists(context = this, viewModel = viewModel)
                 }
             }
         }

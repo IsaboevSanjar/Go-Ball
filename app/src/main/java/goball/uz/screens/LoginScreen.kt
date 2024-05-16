@@ -1,6 +1,7 @@
 package goball.uz.screens
 
 import android.util.Log
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -20,6 +21,7 @@ import androidx.compose.foundation.text.ClickableText
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -52,15 +54,21 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.text.isDigitsOnly
+import androidx.hilt.navigation.compose.hiltViewModel
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import goball.uz.R
+import goball.uz.StadiumsList
+import goball.uz.app.App
+import goball.uz.presentation.StadiumsViewModel
 import goball.uz.ui.theme.fontBold
+import kotlinx.coroutines.flow.collectLatest
 
 class LoginScreen : Screen {
+
     @Composable
     override fun Content() {
-
+        val viewModel = hiltViewModel<StadiumsViewModel>()
         val navigator = LocalNavigator.current
         val clipboardManager: ClipboardManager = LocalClipboardManager.current
         var success by remember {
@@ -187,7 +195,7 @@ class LoginScreen : Screen {
                     }
 
                 }
-                if (!success){
+                if (!success) {
                     Text(
                         text = "kod noto'g'ri",
                         style = MaterialTheme.typography.bodySmall,
@@ -200,7 +208,8 @@ class LoginScreen : Screen {
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 17.dp),
-                onClick = {/* navigator?.push(MainScreen())*/loading = !loading
+                onClick = {
+                    viewModel.loginWithTelegram(otpText.toInt())
                 },
                 shape = RoundedCornerShape(8.dp),
                 colors = ButtonDefaults.buttonColors(
@@ -216,6 +225,15 @@ class LoginScreen : Screen {
                 }
 
 
+            }
+            LaunchedEffect(key1 = viewModel.showErrorToastChannel) {
+                viewModel.showErrorToastChannel.collectLatest { show ->
+                    if (show) {
+                        Toast.makeText(
+                            App.instance, "Error", Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
             }
         }
     }
