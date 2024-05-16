@@ -107,7 +107,7 @@ class StartScreen : Screen {
                         Intent.ACTION_VIEW,
                         Uri.parse("https://t.me/mystadium_bot")
                     )
-                    //context.startActivity(browserIntent)
+                    context.startActivity(browserIntent)
                     navigator?.push(LoginScreen())
                 },
                 shape = RoundedCornerShape(8.dp),

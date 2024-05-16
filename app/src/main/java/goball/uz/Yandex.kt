@@ -28,7 +28,7 @@ class Yandex : AppCompatActivity() {
             CameraPosition(
                 Point(41.2995, 69.2401),
                 13.0f,
-                150.0f,
+                0.0f,
                 30.0f
             )
         )
