@@ -23,15 +23,10 @@ import javax.inject.Singleton
 object AppModule {
 
 
-
-
     @Provides
     @Singleton
-    fun provideApi(): Api {
-        return Retrofit.Builder()
-            .addConverterFactory(GsonConverterFactory.create())
-            .baseUrl(Api.BASE_URL)
-            .build()
+    fun provideApi(retrofit: Retrofit): Api {
+        return retrofit
             .create(Api::class.java)
     }
 
@@ -39,6 +34,49 @@ object AppModule {
     @Singleton
     fun provideRepository(api: Api): StadiumsRepository {
         return StadiumsRepositoryImpl(api)
+    }
+
+    @Provides
+    @Singleton
+    internal fun retrofit(client: OkHttpClient): Retrofit =
+        Retrofit.Builder()
+            .client(client)
+            .baseUrl(Api.BASE_URL)
+            .addConverterFactory(GsonConverterFactory.create())
+            .build()
+
+    @Provides
+    @Singleton
+    internal fun client(
+        interceptor: Interceptor,
+        loggingInterceptor: HttpLoggingInterceptor
+    ): OkHttpClient {
+        return OkHttpClient.Builder()
+            .addInterceptor(loggingInterceptor)
+            .addInterceptor(ChuckerInterceptor(App.instance!!))
+            .addInterceptor(interceptor)
+            .build()
+    }
+
+    @Provides
+    @Singleton
+    internal fun interceptor(): Interceptor {
+        return Interceptor { chain: Interceptor.Chain ->
+            val request = chain.request()
+            val builder: Request.Builder = request.newBuilder()
+            builder
+                .addHeader("Authorization", "Bearer {AppCache.getHelper().token}")
+            val response = chain.proceed(builder.build())
+            response
+        }
+    }
+
+    @Provides
+    @Singleton
+    internal fun loggingInterceptor(): HttpLoggingInterceptor {
+        return HttpLoggingInterceptor().apply {
+            level = HttpLoggingInterceptor.Level.BODY
+        }
     }
 
 
