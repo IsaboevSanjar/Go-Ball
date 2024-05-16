@@ -234,12 +234,12 @@ fun StadiumsList(context: Context, stadiums: List<StadiumListItem>) {
                                 Text(
                                     text = "Stadion $it",
                                     style = MaterialTheme.typography.bodyMedium,
-                                    color = MaterialTheme.colorScheme.onBackground,
+                                    color = MaterialTheme.colorScheme.background,
                                 )
                                 Text(
                                     text = "5.0",
                                     style = MaterialTheme.typography.bodySmall,
-                                    color = MaterialTheme.colorScheme.onBackground,
+                                    color = MaterialTheme.colorScheme.background,
                                 )
                                 Row(Modifier.fillMaxWidth()) {
                                     Image(
@@ -250,7 +250,7 @@ fun StadiumsList(context: Context, stadiums: List<StadiumListItem>) {
                                     Text(
                                         text = "200 000 sum/soat",
                                         style = MaterialTheme.typography.bodySmall,
-                                        color = MaterialTheme.colorScheme.onBackground,
+                                        color = MaterialTheme.colorScheme.background,
                                     )
                                 }
                             }
