@@ -16,6 +16,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import cafe.adriel.voyager.navigator.Navigator
@@ -25,6 +26,7 @@ import com.google.maps.android.compose.GoogleMap
 import com.google.maps.android.compose.rememberCameraPositionState
 import com.yandex.mapkit.MapKitFactory
 import com.yandex.mapkit.mapview.MapView
+import dagger.hilt.android.AndroidEntryPoint
 import goball.uz.presentation.StadiumsRepositoryImpl
 import goball.uz.network.RetrofitInstance
 import goball.uz.presentation.StadiumsViewModel
@@ -33,29 +35,32 @@ import goball.uz.screens.StartScreen
 import goball.uz.ui.theme.GoBallTheme
 import kotlinx.coroutines.flow.collectLatest
 
+@AndroidEntryPoint
 class MainActivity : ComponentActivity() {
 
-    private val viewModel by viewModels<StadiumsViewModel>(factoryProducer = {
-        object : ViewModelProvider.Factory {
-            override fun <T : ViewModel> create(modelClass: Class<T>): T {
-                return StadiumsViewModel(StadiumsRepositoryImpl(RetrofitInstance.api))
-                        as T
-            }
-        }
-    })
+    /* private val viewModel by viewModels<StadiumsViewModel>(factoryProducer = {
+         object : ViewModelProvider.Factory {
+             override fun <T : ViewModel> create(modelClass: Class<T>): T {
+                 return StadiumsViewModel(StadiumsRepositoryImpl(RetrofitInstance.api))
+                         as T
+             }
+         }
+     })*/
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         MapKitFactory.setApiKey("42c1c9b7-5b9f-4fc3-92f0-efcc45ec8dd6")
         setContent {
+            val viewModel = hiltViewModel<StadiumsViewModel>()
             GoBallTheme {
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colorScheme.background
                 ) {
-                    Navigator(screen = StartScreen())
-                    //StadiumLists(context = this, viewModel = viewModel)
+                    //Navigator(screen = StartScreen())
+                    StadiumLists(context = this, viewModel = viewModel)
                 }
             }
         }

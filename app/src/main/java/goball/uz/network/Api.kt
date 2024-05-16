@@ -9,7 +9,7 @@ interface Api {
     suspend fun getAllStadiums(): StadiumList
 
     companion object {
-        val BASE_URL="https://5c2e-213-230-82-66.ngrok-free.app/"
+        val BASE_URL="https://3ebb-84-54-75-249.ngrok-free.app/"
 
     }
 }

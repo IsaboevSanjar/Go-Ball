@@ -52,25 +52,25 @@ fun StadiumsList(context: Context, stadiums: List<StadiumListItem>) {
 
     Text(
         text = "Sizga eng yaqin stadionlar soni 24", textAlign = TextAlign.Center,
-        fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.background,
+        fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onBackground,
         style = MaterialTheme.typography.headlineMedium,
         modifier = Modifier.fillMaxWidth(),
     )
     LazyColumn(
         modifier = Modifier
-            .background(color = MaterialTheme.colorScheme.onBackground)
+            .background(color = MaterialTheme.colorScheme.background)
             .padding(top = 15.dp)
     ) {
         item {
             Text(
                 text = "Sizga eng yaqin stadionlar soni 24", textAlign = TextAlign.Center,
-                fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.background,
+                fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onBackground,
                 style = MaterialTheme.typography.headlineMedium,
                 modifier = Modifier.fillMaxWidth(),
             )
             Text(
                 text = "Top stadionlar", textAlign = TextAlign.Start,
-                fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.background,
+                fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onBackground,
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -180,7 +180,7 @@ fun StadiumsList(context: Context, stadiums: List<StadiumListItem>) {
 
             Text(
                 text = "Eng yaqindagilar", textAlign = TextAlign.Start,
-                fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.background,
+                fontWeight = FontWeight.Bold, color = MaterialTheme.colorScheme.onBackground,
                 style = MaterialTheme.typography.bodyMedium,
                 modifier = Modifier
                     .fillMaxWidth()

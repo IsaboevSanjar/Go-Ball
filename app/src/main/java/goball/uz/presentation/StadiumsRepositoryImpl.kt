@@ -7,8 +7,9 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
 import retrofit2.HttpException
 import java.io.IOException
+import javax.inject.Inject
 
-class StadiumsRepositoryImpl(private val api: Api) : StadiumsRepository {
+class StadiumsRepositoryImpl @Inject constructor(private val api: Api) : StadiumsRepository {
 
     override suspend fun getStadiumsList(): Flow<Result<List<StadiumListItem>>> {
         return flow {
