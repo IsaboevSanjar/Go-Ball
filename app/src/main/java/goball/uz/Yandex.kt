@@ -41,7 +41,7 @@ class Yandex : AppCompatActivity() {
         showMap(mapView)
         val imageProvider = ImageProvider.fromResource(this, R.drawable.price_green)
         val placeMark = mapView.mapWindow.map.mapObjects.addPlacemark().apply {
-            geometry = Point(lat, long)
+            geometry = POINT
             setIcon(imageProvider)
         }
         placeMark.addTapListener(placeMarkTapListener)
@@ -69,5 +69,14 @@ class Yandex : AppCompatActivity() {
         mapView.onStop()
         MapKitFactory.getInstance().onStop()
         super.onStop()
+    }
+    companion object {
+        private val POINT = Point(41.2995, 69.2401)
+        private val POSITION = CameraPosition(
+            POINT,
+            13.0f,
+            0.0f,
+            30.0f
+        )
     }
 }
