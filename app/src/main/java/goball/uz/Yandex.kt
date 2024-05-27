@@ -18,7 +18,7 @@ import com.yandex.runtime.image.ImageProvider
 
 class Yandex : AppCompatActivity() {
     private lateinit var mapView: MapView
-    private val placeMarkTapListener = MapObjectTapListener { _, point ->
+    private val placeMarkTapListener = MapObjectTapListener { id, point ->
         Toast.makeText(
             this@Yandex,
             "Tapped the point (${point.longitude}, ${point.latitude})",
