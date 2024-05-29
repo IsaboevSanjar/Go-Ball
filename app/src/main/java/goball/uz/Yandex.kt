@@ -1,14 +1,19 @@
 package goball.uz
 
+import android.Manifest
 import android.annotation.SuppressLint
+import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import com.yandex.mapkit.Animation
 import com.yandex.mapkit.MapKitFactory
 import com.yandex.mapkit.geometry.Point
 import com.yandex.mapkit.map.CameraPosition
@@ -45,6 +50,7 @@ class Yandex : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
         MapKitFactory.initialize(this)
+        val mapKit = MapKitFactory.getInstance()
         setContentView(R.layout.activity_yandex)
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
@@ -53,7 +59,13 @@ class Yandex : AppCompatActivity() {
         }
 
         mapView = findViewById(R.id.mapview)
+        requestLocationPermission()
+
         showMap(mapView)
+        val userLocation = mapKit.createUserLocationLayer(mapView.mapWindow)
+        userLocation.isVisible = true
+        userLocation.isHeadingEnabled=true
+        mapKit.resetLocationManagerToDefault()
         val bitmap = BitmapFactory.decodeResource(resources, R.drawable.stadium_marker)
         // Resize the bitmap to a desired size (adjust width and height as needed)
         val desiredWidth = 120// Adjust width in pixels (e.g., 48, 32)
@@ -69,6 +81,16 @@ class Yandex : AppCompatActivity() {
             placeMark.addTapListener(placeMarkTapListener)
         }
 
+
+    }
+
+    //Taking user permission to use their location in this app
+    private fun requestLocationPermission() {
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+            ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION), 1)
+            return
+        }
     }
 
     private fun showMap(mapView: MapView) {
@@ -78,14 +100,16 @@ class Yandex : AppCompatActivity() {
                 13.0f,
                 0.0f,
                 30.0f
-            )
+            ),
+            Animation(Animation.Type.SMOOTH, 2f), null
         )
+
     }
 
     override fun onStart() {
         super.onStart()
-        MapKitFactory.getInstance().onStart()
         mapView.onStart()
+        MapKitFactory.getInstance().onStart()
     }
 
     override fun onStop() {
