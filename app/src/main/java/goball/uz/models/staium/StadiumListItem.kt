@@ -16,5 +16,7 @@ data class StadiumListItem(
     val time_end: String,
     val time_start: String,
     val type: Any,
-    val updated_at: String
+    val updated_at: String,
+    val lat: String,
+    val long: String
 )

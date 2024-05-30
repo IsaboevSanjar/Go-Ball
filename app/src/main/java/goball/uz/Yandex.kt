@@ -10,10 +10,12 @@ import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.yandex.mapkit.Animation
 import com.yandex.mapkit.MapKitFactory
 import com.yandex.mapkit.geometry.Point
@@ -27,9 +29,13 @@ import com.yandex.mapkit.user_location.UserLocationLayer.*
 import com.yandex.mapkit.user_location.UserLocationObjectListener
 import com.yandex.mapkit.user_location.UserLocationView
 import com.yandex.runtime.image.ImageProvider
+import dagger.hilt.android.AndroidEntryPoint
+import goball.uz.presentation.StadiumsViewModel
 
+@AndroidEntryPoint
 class Yandex : AppCompatActivity() {
     private lateinit var mapView: MapView
+    private val stadiumsViewModel: StadiumsViewModel by viewModels()
     private val placeMarkTapListener = MapObjectTapListener { id, point ->
         Toast.makeText(
             this@Yandex,
@@ -97,14 +103,18 @@ class Yandex : AppCompatActivity() {
         val desiredHeight = 120 // Adjust height in pixels (e.g., 48, 32)
         val scaledBitmap = Bitmap.createScaledBitmap(bitmap!!, desiredWidth, desiredHeight, false)
         val imageProvider = ImageProvider.fromBitmap(scaledBitmap)
-        locations.forEach { location ->
+        stadiumsViewModel.stadiums.value.forEach {item->
             val placeMark = mapView.mapWindow.map.mapObjects.addPlacemark().apply {
-                geometry = location
+                geometry = Point(item.lat.toDouble(),item.long.toDouble())
                 setIcon(imageProvider)
             }
-            // Optionally add tap listener for each placemark
             placeMark.addTapListener(placeMarkTapListener)
         }
+       /* locations.forEach { location ->
+
+            // Optionally add tap listener for each placemark
+
+        }*/
 
 
     }
