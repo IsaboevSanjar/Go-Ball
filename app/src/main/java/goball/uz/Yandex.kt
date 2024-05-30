@@ -5,6 +5,7 @@ import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Color
 import android.os.Bundle
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
@@ -16,9 +17,15 @@ import androidx.core.view.WindowInsetsCompat
 import com.yandex.mapkit.Animation
 import com.yandex.mapkit.MapKitFactory
 import com.yandex.mapkit.geometry.Point
+import com.yandex.mapkit.layers.ObjectEvent
 import com.yandex.mapkit.map.CameraPosition
+import com.yandex.mapkit.map.IconStyle
 import com.yandex.mapkit.map.MapObjectTapListener
 import com.yandex.mapkit.mapview.MapView
+import com.yandex.mapkit.user_location.UserLocationLayer
+import com.yandex.mapkit.user_location.UserLocationLayer.*
+import com.yandex.mapkit.user_location.UserLocationObjectListener
+import com.yandex.mapkit.user_location.UserLocationView
 import com.yandex.runtime.image.ImageProvider
 
 class Yandex : AppCompatActivity() {
@@ -65,6 +72,24 @@ class Yandex : AppCompatActivity() {
         val userLocation = mapKit.createUserLocationLayer(mapView.mapWindow)
         userLocation.isVisible = true
         userLocation.isHeadingEnabled=true
+        val iconStyle = IconStyle().setScale(0.2f)
+        val customIcon = ImageProvider.fromResource(this, R.drawable.current_location)
+        userLocation.setObjectListener(object :UserLocationObjectListener{
+            override fun onObjectAdded(view: UserLocationView) {
+                view.pin.setIcon(customIcon, iconStyle)
+                view.arrow.setIcon(customIcon, iconStyle)
+            }
+
+            override fun onObjectRemoved(p0: UserLocationView) {
+
+            }
+
+            override fun onObjectUpdated(p0: UserLocationView, p1: ObjectEvent) {
+
+            }
+
+        })
+
         mapKit.resetLocationManagerToDefault()
         val bitmap = BitmapFactory.decodeResource(resources, R.drawable.stadium_marker)
         // Resize the bitmap to a desired size (adjust width and height as needed)
