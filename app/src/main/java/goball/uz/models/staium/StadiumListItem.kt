@@ -8,15 +8,15 @@ data class StadiumListItem(
     val description: Any,
     val id: Int,
     val image: String,
+    val lat: String,
+    val long: String,
     val name: String,
     val owner_id: Int,
     val price: Int,
-    val rating: Any,
+    val rating: Double,
     val status: Any,
     val time_end: String,
     val time_start: String,
     val type: Any,
-    val updated_at: String,
-    val lat: String,
-    val long: String
+    val updated_at: String
 )

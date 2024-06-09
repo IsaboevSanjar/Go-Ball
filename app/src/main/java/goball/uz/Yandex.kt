@@ -5,18 +5,18 @@ import android.annotation.SuppressLint
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
-import android.graphics.Color
 import android.os.Bundle
+import android.util.Log
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.lifecycleScope
 import com.yandex.mapkit.Animation
+import com.yandex.mapkit.MapKit
 import com.yandex.mapkit.MapKitFactory
 import com.yandex.mapkit.geometry.Point
 import com.yandex.mapkit.layers.ObjectEvent
@@ -24,13 +24,14 @@ import com.yandex.mapkit.map.CameraPosition
 import com.yandex.mapkit.map.IconStyle
 import com.yandex.mapkit.map.MapObjectTapListener
 import com.yandex.mapkit.mapview.MapView
-import com.yandex.mapkit.user_location.UserLocationLayer
-import com.yandex.mapkit.user_location.UserLocationLayer.*
 import com.yandex.mapkit.user_location.UserLocationObjectListener
 import com.yandex.mapkit.user_location.UserLocationView
 import com.yandex.runtime.image.ImageProvider
 import dagger.hilt.android.AndroidEntryPoint
+import goball.uz.models.staium.StadiumListItem
 import goball.uz.presentation.StadiumsViewModel
+import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class Yandex : AppCompatActivity() {
@@ -47,15 +48,6 @@ class Yandex : AppCompatActivity() {
     private val lat = 41.2995
     private val long = 69.2401
 
-    val locations = listOf(
-        Point(41.2995, 69.2501),
-        Point(41.2995, 69.2401),
-        Point(41.2900, 69.2401),
-        Point(41.2325, 69.2401),
-        Point(41.3100, 69.2300),
-        Point(41.3150, 69.2350),
-        Point(41.3200, 69.2510),
-    )
 
     @SuppressLint("UseCompatLoadingForDrawables")
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -70,11 +62,22 @@ class Yandex : AppCompatActivity() {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
-
         mapView = findViewById(R.id.mapview)
         requestLocationPermission()
-
         showMap(mapView)
+        userLocation(mapKit)
+
+        lifecycleScope.launch {
+            stadiumsViewModel.stadiums.collectLatest { stadium->
+                if (stadium.isNotEmpty()){
+                    Log.d("ViewModelData", stadium.toString())
+                    addPlaceMarkToStadiums(stadium)
+                }
+            }
+        }
+    }
+
+    private fun userLocation(mapKit: MapKit) {
         val userLocation = mapKit.createUserLocationLayer(mapView.mapWindow)
         userLocation.isVisible = true
         userLocation.isHeadingEnabled=true
@@ -95,28 +98,22 @@ class Yandex : AppCompatActivity() {
             }
 
         })
-
         mapKit.resetLocationManagerToDefault()
+    }
+
+    private fun addPlaceMarkToStadiums(stadiums: List<StadiumListItem>) {
         val bitmap = BitmapFactory.decodeResource(resources, R.drawable.stadium_marker)
         // Resize the bitmap to a desired size (adjust width and height as needed)
         val desiredWidth = 120// Adjust width in pixels (e.g., 48, 32)
         val desiredHeight = 120 // Adjust height in pixels (e.g., 48, 32)
         val scaledBitmap = Bitmap.createScaledBitmap(bitmap!!, desiredWidth, desiredHeight, false)
         val imageProvider = ImageProvider.fromBitmap(scaledBitmap)
-        stadiumsViewModel.stadiums.value.forEach {item->
-            val placeMark = mapView.mapWindow.map.mapObjects.addPlacemark().apply {
-                geometry = Point(item.lat.toDouble(),item.long.toDouble())
-                setIcon(imageProvider)
-            }
+        stadiums.forEach { item ->
+            val placeMark = mapView.mapWindow.map.mapObjects.addPlacemark(Point(item.lat.toDouble(), item.long.toDouble()), imageProvider)
             placeMark.addTapListener(placeMarkTapListener)
+            Toast.makeText(this@Yandex, "LAT: ${item.lat.toDouble()} LONG: ${item.long.toDouble()}", Toast.LENGTH_SHORT).show()
+            Log.d("LATLONG200", "LAT: ${item.lat.toDouble()} LONG: ${item.long.toDouble()}")
         }
-       /* locations.forEach { location ->
-
-            // Optionally add tap listener for each placemark
-
-        }*/
-
-
     }
 
     //Taking user permission to use their location in this app

@@ -18,7 +18,7 @@ interface Api {
     ): TgToken
 
     companion object {
-        val BASE_URL = "https://27d5-213-230-72-186.ngrok-free.app/"
+        val BASE_URL = "https://661b-82-215-121-218.ngrok-free.app/"
 
     }
 }

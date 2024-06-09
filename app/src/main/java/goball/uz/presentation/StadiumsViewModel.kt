@@ -32,13 +32,15 @@ class StadiumsViewModel
             repository.getStadiumsList().collectLatest { result ->
                 when (result) {
                     is Result.Error -> {
+                        Log.e("StadiumsViewModel", "Error fetching stadiums: ${result.data}")
                         _showErrorChannel.send(true)
                     }
 
                     is Result.Success -> {
                         result.data?.let { stadium ->
+                            Log.d("StadiumsViewModel", "Fetched stadiums: $stadium")
                             _stadiums.update { stadium }
-                        }
+                        }?:Log.e("StadiumsViewModel", "Fetched stadiums data is null")
                     }
                 }
             }
