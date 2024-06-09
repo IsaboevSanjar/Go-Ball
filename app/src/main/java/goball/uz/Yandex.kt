@@ -7,14 +7,22 @@ import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Log
+import android.view.MenuItem
 import android.widget.Toast
+import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
+import androidx.compose.runtime.Composable
 import androidx.core.app.ActivityCompat
+import androidx.core.view.GravityCompat
 import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.lifecycleScope
+import cafe.adriel.voyager.navigator.LocalNavigator
+import com.google.android.material.navigation.NavigationView
 import com.yandex.mapkit.Animation
 import com.yandex.mapkit.MapKit
 import com.yandex.mapkit.MapKitFactory
@@ -30,6 +38,9 @@ import com.yandex.runtime.image.ImageProvider
 import dagger.hilt.android.AndroidEntryPoint
 import goball.uz.models.staium.StadiumListItem
 import goball.uz.presentation.StadiumsViewModel
+import goball.uz.screens.LoginScreen
+import goball.uz.screens.StartScreen
+import goball.uz.ui.theme.GoBallTheme
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -37,6 +48,8 @@ import kotlinx.coroutines.launch
 class Yandex : AppCompatActivity() {
     private lateinit var mapView: MapView
     private val stadiumsViewModel: StadiumsViewModel by viewModels()
+    private lateinit var drawerLayout: DrawerLayout
+    private lateinit var navigationView: NavigationView
     private val placeMarkTapListener = MapObjectTapListener { id, point ->
         Toast.makeText(
             this@Yandex,
@@ -57,11 +70,44 @@ class Yandex : AppCompatActivity() {
         MapKitFactory.initialize(this)
         val mapKit = MapKitFactory.getInstance()
         setContentView(R.layout.activity_yandex)
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main)) { v, insets ->
+        drawerLayout = findViewById(R.id.drawer_layout)
+        navigationView = findViewById(R.id.navigation_view)
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.drawer_layout)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
+        // Set up the toolbar with a drawer icon
+        val toolbar: androidx.appcompat.widget.Toolbar = findViewById(R.id.toolbar)
+        setSupportActionBar(toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_with_shadow)
+        // Handle navigation item clicks
+        navigationView.setNavigationItemSelectedListener { menuItem ->
+            when (menuItem.itemId) {
+                R.id.nav_first -> {
+                    setContent {
+                        val navigator = LocalNavigator.current
+                        GoBallTheme {
+                            navigator?.push(LoginScreen())
+                        }
+                    }
+                }
+
+                R.id.nav_second -> {
+                    setContent {
+                        val navigator = LocalNavigator.current
+                        GoBallTheme {
+                            navigator?.push(LoginScreen())
+                        }
+                    }
+                }
+            }
+            drawerLayout.closeDrawers()
+            true
+        }
+
+
         mapView = findViewById(R.id.mapview)
         requestLocationPermission()
         showMap(mapView)
@@ -74,6 +120,15 @@ class Yandex : AppCompatActivity() {
                     addPlaceMarkToStadiums(stadium)
                 }
             }
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return if (item.itemId == android.R.id.home) {
+            drawerLayout.openDrawer(GravityCompat.START)
+            true
+        } else {
+            super.onOptionsItemSelected(item)
         }
     }
 

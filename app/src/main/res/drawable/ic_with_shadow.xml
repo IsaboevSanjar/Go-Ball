@@ -1,0 +1,26 @@
+<layer-list xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:left="2dp" android:top="2dp"> <!-- Adjust the offset for the shadow -->
+        <shape >
+            <solid android:color="#349F9F9F"/> <!-- Adjust the color and opacity -->
+            <corners android:radius="24dp"/> <!-- Adjust the radius to match your circle -->
+            <size android:width="48dp" android:height="48dp"/>
+        </shape>
+    </item>
+    <item>
+        <vector
+            android:width="48dp"
+            android:height="48dp"
+            android:viewportWidth="48"
+            android:viewportHeight="48">
+            <path
+                android:fillColor="#ffffff"
+                android:pathData="M24,2A22,22 0,1 0,24 46A22,22 0,1 0,24 2Z"/>
+            <path
+                android:strokeColor="#000000"
+                android:strokeWidth="2"
+                android:strokeLineCap="round"
+                android:strokeLineJoin="round"
+                android:pathData="M16,24H32M16,19H32M16,29H26"/>
+        </vector>
+    </item>
+</layer-list>
