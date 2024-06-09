@@ -68,8 +68,8 @@ class Yandex : AppCompatActivity() {
         userLocation(mapKit)
 
         lifecycleScope.launch {
-            stadiumsViewModel.stadiums.collectLatest { stadium->
-                if (stadium.isNotEmpty()){
+            stadiumsViewModel.stadiums.collectLatest { stadium ->
+                if (stadium.isNotEmpty()) {
                     Log.d("ViewModelData", stadium.toString())
                     addPlaceMarkToStadiums(stadium)
                 }
@@ -80,10 +80,10 @@ class Yandex : AppCompatActivity() {
     private fun userLocation(mapKit: MapKit) {
         val userLocation = mapKit.createUserLocationLayer(mapView.mapWindow)
         userLocation.isVisible = true
-        userLocation.isHeadingEnabled=true
+        userLocation.isHeadingEnabled = true
         val iconStyle = IconStyle().setScale(0.2f)
         val customIcon = ImageProvider.fromResource(this, R.drawable.current_location)
-        userLocation.setObjectListener(object :UserLocationObjectListener{
+        userLocation.setObjectListener(object : UserLocationObjectListener {
             override fun onObjectAdded(view: UserLocationView) {
                 view.pin.setIcon(customIcon, iconStyle)
                 view.arrow.setIcon(customIcon, iconStyle)
@@ -109,18 +109,35 @@ class Yandex : AppCompatActivity() {
         val scaledBitmap = Bitmap.createScaledBitmap(bitmap!!, desiredWidth, desiredHeight, false)
         val imageProvider = ImageProvider.fromBitmap(scaledBitmap)
         stadiums.forEach { item ->
-            val placeMark = mapView.mapWindow.map.mapObjects.addPlacemark(Point(item.lat.toDouble(), item.long.toDouble()), imageProvider)
-            placeMark.addTapListener(placeMarkTapListener)
-            Toast.makeText(this@Yandex, "LAT: ${item.lat.toDouble()} LONG: ${item.long.toDouble()}", Toast.LENGTH_SHORT).show()
-            Log.d("LATLONG200", "LAT: ${item.lat.toDouble()} LONG: ${item.long.toDouble()}")
+            val placeMark = mapView.mapWindow.map.mapObjects.addPlacemark(
+                Point(
+                    item.lat.toDouble(),
+                    item.long.toDouble()
+                ), imageProvider
+            )
+            placeMark.addTapListener(StadiumTapListener(this@Yandex, item.id))
         }
     }
 
     //Taking user permission to use their location in this app
     private fun requestLocationPermission() {
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-            ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            ActivityCompat.requestPermissions(this, arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION), 1)
+        if (ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_FINE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED &&
+            ActivityCompat.checkSelfPermission(
+                this,
+                Manifest.permission.ACCESS_COARSE_LOCATION
+            ) != PackageManager.PERMISSION_GRANTED
+        ) {
+            ActivityCompat.requestPermissions(
+                this,
+                arrayOf(
+                    Manifest.permission.ACCESS_FINE_LOCATION,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                ),
+                1
+            )
             return
         }
     }
