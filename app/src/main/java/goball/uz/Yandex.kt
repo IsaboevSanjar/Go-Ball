@@ -85,22 +85,24 @@ class Yandex : AppCompatActivity() {
         // Handle navigation item clicks
         navigationView.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
-                R.id.nav_first -> {
-                    setContent {
-                        val navigator = LocalNavigator.current
-                        GoBallTheme {
-                            navigator?.push(LoginScreen())
-                        }
-                    }
+                R.id.my_stadiums -> {
+                    Toast.makeText(this, "My Stadium", Toast.LENGTH_SHORT).show()
                 }
 
-                R.id.nav_second -> {
-                    setContent {
+                R.id.settings -> {
+                    Toast.makeText(this, "Settings", Toast.LENGTH_SHORT).show()
+                    /*setContent {
                         val navigator = LocalNavigator.current
                         GoBallTheme {
                             navigator?.push(LoginScreen())
                         }
-                    }
+                    }*/
+                }
+                R.id.about_us -> {
+                    Toast.makeText(this, "About us", Toast.LENGTH_SHORT).show()
+                }
+                R.id.help -> {
+                    Toast.makeText(this, "Help", Toast.LENGTH_SHORT).show()
                 }
             }
             drawerLayout.closeDrawers()

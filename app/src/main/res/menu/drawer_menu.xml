@@ -1,10 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:id="@+id/nav_first"
-        android:title="First Screen" />
+        android:id="@+id/my_stadiums"
+        android:icon="@drawable/my_stadiums_icon"
+        android:title="@string/my_stadiums" />
     <item
-        android:id="@+id/nav_second"
-        android:title="Second Screen"
-        />
+        android:id="@+id/settings"
+        android:icon="@drawable/settings_02_icon"
+        android:title="@string/settings" />
+    <item
+        android:id="@+id/about_us"
+        android:icon="@drawable/info_circle_icon"
+        android:title="@string/about_us" />
+    <item
+        android:id="@+id/help"
+        android:icon="@drawable/help_circle_icon"
+        android:title="@string/help" />
 </menu>

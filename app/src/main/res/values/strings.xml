@@ -8,4 +8,9 @@
 
     <string name="content_description">Book</string>
     <string name="confirm">Tasdoqlash</string>
+    <string name="my_stadiums">Mening stadionlarim</string>
+    <string name="settings">Sozlamalar</string>
+    <string name="about_us">Biz haqimizda</string>
+    <string name="help">Yordam</string>
+    <string name="log_out">Chiqish</string>
 </resources>
