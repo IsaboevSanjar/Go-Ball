@@ -30,7 +30,6 @@ import com.yandex.mapkit.user_location.UserLocationObjectListener
 import com.yandex.mapkit.user_location.UserLocationView
 import com.yandex.runtime.image.ImageProvider
 import dagger.hilt.android.AndroidEntryPoint
-import goball.ComposeBottomSheetDialogFragment
 import goball.uz.databinding.ActivityYandexBinding
 import goball.uz.models.staium.StadiumListItem
 import goball.uz.presentation.StadiumsViewModel
@@ -103,7 +102,7 @@ class Yandex : AppCompatActivity() {
     // Handle navigation item clicks
     private fun navigationItemClick(){
         binding.showStadiums.setOnClickListener {
-            val bottomSheet = ComposeBottomSheetDialogFragment()
+            val bottomSheet = ComposeBottomSheetDialogFragment(stadiumsViewModel)
             Toast.makeText(this, "Stadiums", Toast.LENGTH_SHORT).show()
             bottomSheet.show(supportFragmentManager, bottomSheet.tag)
         }
