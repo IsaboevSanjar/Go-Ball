@@ -1,14 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    android:padding="16dp"
+    android:paddingHorizontal="12dp"
+    android:paddingVertical="5dp"
+    android:backgroundTint="@android:color/transparent"
     android:background="@color/white">
-    <TextView
+    <ImageView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Header"
-        android:textColor="@android:color/holo_green_dark"
-        android:textSize="18sp" />
+        android:contentDescription="Close drawer"
+        android:src="@drawable/x_icon_with_shadow"/>
+    <LinearLayout
+        android:layout_marginTop="20dp"
+        android:orientation="horizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="66dp">
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            tools:ignore="UselessParent">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/oval_gray"
+                android:contentDescription="Logo image" />
+            <ImageView
+                android:layout_width="46dp"
+                android:layout_gravity="center"
+                android:layout_marginStart="3dp"
+                android:layout_height="46dp"
+                android:src="@drawable/icon_transparent"/>
+
+        </FrameLayout>
+        <LinearLayout
+            android:orientation="vertical"
+            android:paddingHorizontal="10dp"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="17sp"
+                android:text="Eshmatov Toshmat"
+                android:fontFamily="@font/jakarta_bold"
+                android:textColor="@color/black"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="12sp"
+                android:text="+998 90 000 12 34"
+                android:fontFamily="@font/jakarta_regular"
+                android:textColor="@color/black"/>
+        </LinearLayout>
+    </LinearLayout>
+
 </LinearLayout>
