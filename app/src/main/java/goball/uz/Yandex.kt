@@ -36,6 +36,7 @@ import com.yandex.mapkit.user_location.UserLocationObjectListener
 import com.yandex.mapkit.user_location.UserLocationView
 import com.yandex.runtime.image.ImageProvider
 import dagger.hilt.android.AndroidEntryPoint
+import goball.uz.databinding.ActivityYandexBinding
 import goball.uz.models.staium.StadiumListItem
 import goball.uz.presentation.StadiumsViewModel
 import goball.uz.screens.LoginScreen
@@ -46,10 +47,9 @@ import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class Yandex : AppCompatActivity() {
+    private lateinit var binding: ActivityYandexBinding
     private lateinit var mapView: MapView
     private val stadiumsViewModel: StadiumsViewModel by viewModels()
-    private lateinit var drawerLayout: DrawerLayout
-    private lateinit var navigationView: NavigationView
     private val placeMarkTapListener = MapObjectTapListener { id, point ->
         Toast.makeText(
             this@Yandex,
@@ -67,23 +67,54 @@ class Yandex : AppCompatActivity() {
         MapKitFactory.setApiKey("42c1c9b7-5b9f-4fc3-92f0-efcc45ec8dd6")
         super.onCreate(savedInstanceState)
         enableEdgeToEdge()
+        binding = ActivityYandexBinding.inflate(layoutInflater)
+        val view = binding.root
+        setContentView(view)
         MapKitFactory.initialize(this)
         val mapKit = MapKitFactory.getInstance()
-        setContentView(R.layout.activity_yandex)
-        drawerLayout = findViewById(R.id.drawer_layout)
-        navigationView = findViewById(R.id.navigation_view)
+
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.drawer_layout)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
             insets
         }
         // Set up the toolbar with a drawer icon
-        val toolbar: androidx.appcompat.widget.Toolbar = findViewById(R.id.toolbar)
-        setSupportActionBar(toolbar)
+        setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_with_shadow)
-        // Handle navigation item clicks
-        navigationView.setNavigationItemSelectedListener { menuItem ->
+        navigationItemClick()
+
+        mapView = findViewById(R.id.mapview)
+        requestLocationPermission()
+        showMap(mapView)
+        userLocation(mapKit)
+
+        lifecycleScope.launch {
+            stadiumsViewModel.stadiums.collectLatest { stadium ->
+                if (stadium.isNotEmpty()) {
+                    Log.d("ViewModelData", stadium.toString())
+                    addPlaceMarkToStadiums(stadium)
+                }
+            }
+        }
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return if (item.itemId == android.R.id.home) {
+            binding.drawerLayout.openDrawer(GravityCompat.START)
+            true
+        } else {
+            super.onOptionsItemSelected(item)
+        }
+    }
+
+    // Handle navigation item clicks
+    private fun navigationItemClick(){
+        binding.logout.setOnClickListener {
+            Toast.makeText(this, "Log Out", Toast.LENGTH_SHORT).show()
+            binding.drawerLayout.closeDrawers()
+        }
+        binding.navigationView.setNavigationItemSelectedListener { menuItem ->
             when (menuItem.itemId) {
                 R.id.my_stadiums -> {
                     Toast.makeText(this, "My Stadium", Toast.LENGTH_SHORT).show()
@@ -105,32 +136,8 @@ class Yandex : AppCompatActivity() {
                     Toast.makeText(this, "Help", Toast.LENGTH_SHORT).show()
                 }
             }
-            drawerLayout.closeDrawers()
+            binding.drawerLayout.closeDrawers()
             true
-        }
-
-
-        mapView = findViewById(R.id.mapview)
-        requestLocationPermission()
-        showMap(mapView)
-        userLocation(mapKit)
-
-        lifecycleScope.launch {
-            stadiumsViewModel.stadiums.collectLatest { stadium ->
-                if (stadium.isNotEmpty()) {
-                    Log.d("ViewModelData", stadium.toString())
-                    addPlaceMarkToStadiums(stadium)
-                }
-            }
-        }
-    }
-
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        return if (item.itemId == android.R.id.home) {
-            drawerLayout.openDrawer(GravityCompat.START)
-            true
-        } else {
-            super.onOptionsItemSelected(item)
         }
     }
 
