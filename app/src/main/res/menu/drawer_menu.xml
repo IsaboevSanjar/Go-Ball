@@ -5,5 +5,6 @@
         android:title="First Screen" />
     <item
         android:id="@+id/nav_second"
-        android:title="Second Screen" />
+        android:title="Second Screen"
+        />
 </menu>
