@@ -9,10 +9,12 @@
     android:backgroundTint="@android:color/transparent"
     android:background="@color/white">
     <ImageView
+        android:clickable="true"
+        android:focusable="true"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:contentDescription="Close drawer"
-        android:src="@drawable/x_icon_with_shadow"/>
+        android:src="@drawable/x_oval_bg"/>
     <LinearLayout
         android:layout_marginTop="20dp"
         android:orientation="horizontal"

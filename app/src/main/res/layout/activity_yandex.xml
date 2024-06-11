@@ -22,7 +22,50 @@
         <com.yandex.mapkit.mapview.MapView
             android:id="@+id/mapview"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:layout_height="match_parent">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_marginBottom="30dp">
+
+                <LinearLayout
+                    android:contentDescription="@string/all_stadium_list"
+                    android:id="@+id/show_stadiums"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="20dp"
+                    android:background="@drawable/white_bt_bg"
+                    android:clickable="true"
+                    android:elevation="5dp"
+                    android:focusable="true"
+                    android:gravity="center"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="13dp"
+                    android:paddingVertical="10dp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent">
+
+                    <ImageView
+                        android:layout_width="25dp"
+                        android:layout_height="25dp"
+                        android:src="@drawable/current_location" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="6dp"
+                        android:fontFamily="@font/jakarta_regular"
+                        android:text="Stadionlar mavjud"
+                        android:textSize="16sp"
+                        android:textColor="@color/black"/>
+                </LinearLayout>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </com.yandex.mapkit.mapview.MapView>
+
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
@@ -31,8 +74,8 @@
         android:id="@+id/navigation_view"
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
-        android:layout_marginTop="30dp"
         android:layout_gravity="start"
+        android:layout_marginTop="30dp"
         android:layout_marginBottom="50dp"
         android:background="@drawable/rounded_drawer_background"
         android:fitsSystemWindows="true"

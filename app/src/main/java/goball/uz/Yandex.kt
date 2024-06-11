@@ -9,20 +9,14 @@ import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
 import android.widget.Toast
-import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
-import androidx.compose.runtime.Composable
 import androidx.core.app.ActivityCompat
 import androidx.core.view.GravityCompat
 import androidx.core.view.ViewCompat
-import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
-import androidx.drawerlayout.widget.DrawerLayout
 import androidx.lifecycle.lifecycleScope
-import cafe.adriel.voyager.navigator.LocalNavigator
-import com.google.android.material.navigation.NavigationView
 import com.yandex.mapkit.Animation
 import com.yandex.mapkit.MapKit
 import com.yandex.mapkit.MapKitFactory
@@ -39,9 +33,6 @@ import dagger.hilt.android.AndroidEntryPoint
 import goball.uz.databinding.ActivityYandexBinding
 import goball.uz.models.staium.StadiumListItem
 import goball.uz.presentation.StadiumsViewModel
-import goball.uz.screens.LoginScreen
-import goball.uz.screens.StartScreen
-import goball.uz.ui.theme.GoBallTheme
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
@@ -81,7 +72,7 @@ class Yandex : AppCompatActivity() {
         // Set up the toolbar with a drawer icon
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setHomeAsUpIndicator(R.drawable.ic_with_shadow)
+        supportActionBar?.setHomeAsUpIndicator(R.drawable.oval_burger_menu)
         navigationItemClick()
 
         mapView = findViewById(R.id.mapview)
@@ -110,6 +101,9 @@ class Yandex : AppCompatActivity() {
 
     // Handle navigation item clicks
     private fun navigationItemClick(){
+        binding.showStadiums.setOnClickListener {
+            Toast.makeText(this, "Stadiums", Toast.LENGTH_SHORT).show()
+        }
         binding.logout.setOnClickListener {
             Toast.makeText(this, "Log Out", Toast.LENGTH_SHORT).show()
             binding.drawerLayout.closeDrawers()
