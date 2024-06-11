@@ -2,6 +2,7 @@ package goball.uz
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -51,6 +52,7 @@ class Yandex : AppCompatActivity() {
     }
     private val lat = 41.2995
     private val long = 69.2401
+    private var stadiumsCount=0
 
 
     @SuppressLint("UseCompatLoadingForDrawables")
@@ -83,8 +85,9 @@ class Yandex : AppCompatActivity() {
         lifecycleScope.launch {
             stadiumsViewModel.stadiums.collectLatest { stadium ->
                 if (stadium.isNotEmpty()) {
-                    Log.d("ViewModelData", stadium.toString())
                     addPlaceMarkToStadiums(stadium)
+                    stadiumsCount=stadium.size
+                    binding.stadiumCount.text="$stadiumsCount  Stadionlar mavjud "
                 }
             }
         }
@@ -100,24 +103,27 @@ class Yandex : AppCompatActivity() {
     }
 
     // Handle navigation item clicks
+    @SuppressLint("SetTextI18n")
     private fun navigationItemClick(){
         binding.showStadiums.setOnClickListener {
             val bottomSheet = ComposeBottomSheetDialogFragment(stadiumsViewModel)
-            Toast.makeText(this, "Stadiums", Toast.LENGTH_SHORT).show()
+            Toast.makeText(this, "$stadiumsCount", Toast.LENGTH_SHORT).show()
             bottomSheet.show(supportFragmentManager, bottomSheet.tag)
         }
         binding.logout.setOnClickListener {
-            Toast.makeText(this, "Log Out", Toast.LENGTH_SHORT).show()
             binding.drawerLayout.closeDrawers()
         }
         binding.navigationView.setNavigationItemSelectedListener { menuItem ->
+            val intent = Intent(this, ComposeActivity::class.java)
             when (menuItem.itemId) {
                 R.id.my_stadiums -> {
                     Toast.makeText(this, "My Stadium", Toast.LENGTH_SHORT).show()
+                    intent.putExtra("menu_item", 1)
                 }
 
                 R.id.settings -> {
                     Toast.makeText(this, "Settings", Toast.LENGTH_SHORT).show()
+                    intent.putExtra("menu_item", 2)
                     /*setContent {
                         val navigator = LocalNavigator.current
                         GoBallTheme {
@@ -127,11 +133,14 @@ class Yandex : AppCompatActivity() {
                 }
                 R.id.about_us -> {
                     Toast.makeText(this, "About us", Toast.LENGTH_SHORT).show()
+                    intent.putExtra("menu_item", 3)
                 }
                 R.id.help -> {
                     Toast.makeText(this, "Help", Toast.LENGTH_SHORT).show()
+                    intent.putExtra("menu_item", 4)
                 }
             }
+            startActivity(intent)
             binding.drawerLayout.closeDrawers()
             true
         }
