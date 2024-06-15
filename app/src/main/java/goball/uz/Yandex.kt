@@ -124,11 +124,13 @@ class Yandex : AppCompatActivity() {
                 R.id.my_stadiums -> {
                     Toast.makeText(this, "My Stadium", Toast.LENGTH_SHORT).show()
                     intent.putExtra("menu_item", 1)
+                    intent.putExtra("menu_text", menuItem.title)
                 }
 
                 R.id.settings -> {
                     Toast.makeText(this, "Settings", Toast.LENGTH_SHORT).show()
                     intent.putExtra("menu_item", 2)
+                    intent.putExtra("menu_text", menuItem.title)
                     /*setContent {
                         val navigator = LocalNavigator.current
                         GoBallTheme {
@@ -140,11 +142,13 @@ class Yandex : AppCompatActivity() {
                 R.id.about_us -> {
                     Toast.makeText(this, "About us", Toast.LENGTH_SHORT).show()
                     intent.putExtra("menu_item", 3)
+                    intent.putExtra("menu_text", menuItem.title)
                 }
 
                 R.id.help -> {
                     Toast.makeText(this, "Help", Toast.LENGTH_SHORT).show()
                     intent.putExtra("menu_item", 4)
+                    intent.putExtra("menu_text", menuItem.title)
                 }
             }
             startActivity(intent)
