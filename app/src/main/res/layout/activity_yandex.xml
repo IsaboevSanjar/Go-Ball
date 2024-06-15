@@ -43,7 +43,7 @@
                     android:gravity="center"
                     android:orientation="horizontal"
                     android:paddingHorizontal="13dp"
-                    android:paddingVertical="10dp"
+                    android:paddingVertical="7dp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent">
@@ -57,7 +57,7 @@
                         android:id="@+id/stadium_count"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="6dp"
+                        android:layout_marginStart="4dp"
                         android:fontFamily="@font/jakarta_regular"
                         android:text="Stadionlar mavjud"
                         android:textSize="16sp"
@@ -76,8 +76,8 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:layout_marginTop="30dp"
-        android:layout_marginBottom="50dp"
+        android:layout_marginBottom="20dp"
+        android:layout_marginTop="35dp"
         android:background="@drawable/rounded_drawer_background"
         android:fitsSystemWindows="true"
         app:headerLayout="@layout/nav_header"
@@ -91,6 +91,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
+            android:layout_marginBottom="10dp"
             android:orientation="horizontal"
             android:padding="16dp">
 
