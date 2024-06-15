@@ -32,6 +32,7 @@ import com.yandex.mapkit.user_location.UserLocationView
 import com.yandex.runtime.image.ImageProvider
 import dagger.hilt.android.AndroidEntryPoint
 import goball.uz.databinding.ActivityYandexBinding
+import goball.uz.databinding.NavHeaderBinding
 import goball.uz.models.staium.StadiumListItem
 import goball.uz.presentation.StadiumsViewModel
 import kotlinx.coroutines.flow.collectLatest
@@ -40,6 +41,7 @@ import kotlinx.coroutines.launch
 @AndroidEntryPoint
 class Yandex : AppCompatActivity() {
     private lateinit var binding: ActivityYandexBinding
+    private lateinit var headerBinding: NavHeaderBinding
     private lateinit var mapView: MapView
     private val stadiumsViewModel: StadiumsViewModel by viewModels()
     private val placeMarkTapListener = MapObjectTapListener { id, point ->
@@ -52,7 +54,7 @@ class Yandex : AppCompatActivity() {
     }
     private val lat = 41.2995
     private val long = 69.2401
-    private var stadiumsCount=0
+    private var stadiumsCount = 0
 
 
     @SuppressLint("UseCompatLoadingForDrawables")
@@ -62,10 +64,10 @@ class Yandex : AppCompatActivity() {
         enableEdgeToEdge()
         binding = ActivityYandexBinding.inflate(layoutInflater)
         val view = binding.root
+        headerBinding = NavHeaderBinding.bind(binding.navigationView.getHeaderView(0))
         setContentView(view)
         MapKitFactory.initialize(this)
         val mapKit = MapKitFactory.getInstance()
-
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.drawer_layout)) { v, insets ->
             val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
@@ -86,8 +88,8 @@ class Yandex : AppCompatActivity() {
             stadiumsViewModel.stadiums.collectLatest { stadium ->
                 if (stadium.isNotEmpty()) {
                     addPlaceMarkToStadiums(stadium)
-                    stadiumsCount=stadium.size
-                    binding.stadiumCount.text="$stadiumsCount  Stadionlar mavjud "
+                    stadiumsCount = stadium.size
+                    binding.stadiumCount.text = "$stadiumsCount  Stadionlar mavjud "
                 }
             }
         }
@@ -104,13 +106,16 @@ class Yandex : AppCompatActivity() {
 
     // Handle navigation item clicks
     @SuppressLint("SetTextI18n")
-    private fun navigationItemClick(){
+    private fun navigationItemClick() {
         binding.showStadiums.setOnClickListener {
             val bottomSheet = ComposeBottomSheetDialogFragment(stadiumsViewModel)
             Toast.makeText(this, "$stadiumsCount", Toast.LENGTH_SHORT).show()
             bottomSheet.show(supportFragmentManager, bottomSheet.tag)
         }
         binding.logout.setOnClickListener {
+            binding.drawerLayout.closeDrawers()
+        }
+        headerBinding.closeDrawer.setOnClickListener {
             binding.drawerLayout.closeDrawers()
         }
         binding.navigationView.setNavigationItemSelectedListener { menuItem ->
@@ -131,10 +136,12 @@ class Yandex : AppCompatActivity() {
                         }
                     }*/
                 }
+
                 R.id.about_us -> {
                     Toast.makeText(this, "About us", Toast.LENGTH_SHORT).show()
                     intent.putExtra("menu_item", 3)
                 }
+
                 R.id.help -> {
                     Toast.makeText(this, "Help", Toast.LENGTH_SHORT).show()
                     intent.putExtra("menu_item", 4)
