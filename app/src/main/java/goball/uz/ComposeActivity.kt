@@ -25,8 +25,7 @@ import cafe.adriel.voyager.navigator.Navigator
 import dagger.hilt.android.AndroidEntryPoint
 import goball.uz.screens.AboutUsScreen
 import goball.uz.screens.HelpScreen
-import goball.uz.screens.LoginScreen
-import goball.uz.screens.MyStadiums
+import goball.uz.screens.mystadium.MyStadiums
 import goball.uz.screens.SettingsScreen
 import goball.uz.ui.theme.GoBallTheme
 

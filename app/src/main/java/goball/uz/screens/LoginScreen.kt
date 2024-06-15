@@ -208,7 +208,7 @@ class LoginScreen : Screen {
                         viewModel.loginWithTelegram(otpText.toInt())
                     }
                 },
-                shape = RoundedCornerShape(8.dp),
+                shape = RoundedCornerShape(50.dp),
                 colors = ButtonDefaults.buttonColors(
                     containerColor = colorResource(id = R.color.primary),
                     contentColor = Color.White

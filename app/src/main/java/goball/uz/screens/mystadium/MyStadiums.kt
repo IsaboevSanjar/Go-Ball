@@ -1,8 +1,7 @@
-package goball.uz.screens
+package goball.uz.screens.mystadium
 
-import android.content.Intent
-import android.net.Uri
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -11,71 +10,68 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ElevatedButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import goball.uz.R
-import goball.uz.presentation.StadiumsViewModel
 
-class StartScreen : Screen {
+class MyStadiums : Screen {
     @Composable
     override fun Content() {
-        val context = LocalContext.current
+        val hasStadium by remember {
+            mutableStateOf(false)
+        }
+        var loading by remember {
+            mutableStateOf(false)
+        }
         val navigator = LocalNavigator.current
-
         Column(
             modifier = Modifier
-                .fillMaxSize()
-                .padding(bottom = 100.dp),
+                .fillMaxSize(),
             horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.SpaceBetween
+            verticalArrangement = Arrangement.SpaceEvenly
         ) {
             Spacer(modifier = Modifier.height(50.dp))
+            if (!hasStadium){
 
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                Image(
-                    modifier = Modifier.size(140.dp),
-                    painter = painterResource(id = R.drawable.ic_launcher_background),
-                    contentDescription = "Logo"
-                )
-                Spacer(modifier = Modifier.size(20.dp))
+                Column (horizontalAlignment = Alignment.CenterHorizontally){
+                    Image(
+                        painter = painterResource(id = R.drawable.no_stadium_adding),
+                        contentDescription = "Stadium Adding Image"
+                    )
+                    Spacer(modifier = Modifier.height(10.dp))
+                    Text(text = "Stadion mavjud emas", style = MaterialTheme.typography.headlineMedium)
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Text(text = "Stadioningizni qo'shing va dastur \n yordamida nazorat qiling",
+                        style = MaterialTheme.typography.titleMedium, textAlign = TextAlign.Center)
 
-                Text(
-                    text = "Tasdiqlash kodini telegram botdan\n bir zumda oling",
-                    style = MaterialTheme.typography.titleMedium,
-                    textAlign = TextAlign.Center
-                )
+                }
+
             }
-
+            Spacer(modifier = Modifier.height(50.dp))
             ElevatedButton(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 17.dp),
                 onClick = {
-                    val browserIntent = Intent(
-                        Intent.ACTION_VIEW,
-                        Uri.parse("https://t.me/mystadium_bot")
-                    )
-                    context.startActivity(browserIntent)
-                    navigator?.push(LoginScreen())
+                          loading=!loading
                 },
                 shape = RoundedCornerShape(50.dp),
                 colors = ButtonDefaults.buttonColors(
@@ -84,8 +80,16 @@ class StartScreen : Screen {
                 ),
                 contentPadding = PaddingValues(vertical = 16.dp)
             ) {
-                Text(text = "Botga o'tish", style = MaterialTheme.typography.titleMedium)
+                if (!loading) {
+                    Text(text = "Stadion qo'shish", style = MaterialTheme.typography.titleMedium)
+                } else {
+                    Text(text = "Loading", style = MaterialTheme.typography.titleMedium)
+                }
+
+
             }
+
         }
+
     }
 }
