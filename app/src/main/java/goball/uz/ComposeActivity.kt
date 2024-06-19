@@ -40,9 +40,9 @@ class ComposeActivity : AppCompatActivity() {
 
                 when (menuItemID) {
                     1 -> Navigator(screen = MyStadiums(finishActivity))
-                    2 -> Navigator(screen = SettingsScreen())
+                    2 -> Navigator(screen = SettingsScreen(finishActivity))
                     3 -> Navigator(screen = AboutUsScreen(finishActivity))
-                    4 -> Navigator(screen = HelpScreen())
+                    4 -> Navigator(screen = HelpScreen(finishActivity))
                 }
             }
         }
