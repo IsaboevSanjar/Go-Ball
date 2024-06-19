@@ -18,6 +18,7 @@ import androidx.core.view.GravityCompat
 import androidx.core.view.ViewCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.lifecycle.lifecycleScope
+import cafe.adriel.voyager.navigator.Navigator
 import com.yandex.mapkit.Animation
 import com.yandex.mapkit.MapKit
 import com.yandex.mapkit.MapKitFactory
@@ -35,6 +36,7 @@ import goball.uz.databinding.ActivityYandexBinding
 import goball.uz.databinding.NavHeaderBinding
 import goball.uz.models.staium.StadiumListItem
 import goball.uz.presentation.StadiumsViewModel
+import goball.uz.screens.mystadium.MyStadiums
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.launch
 
