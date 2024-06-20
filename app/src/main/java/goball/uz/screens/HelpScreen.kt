@@ -24,8 +24,9 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import goball.uz.R
+import goball.uz.helper.FinishActivityState
 
-class HelpScreen(private val finishActivity: MutableState<Boolean>) : Screen {
+class HelpScreen() : Screen {
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
@@ -43,7 +44,7 @@ class HelpScreen(private val finishActivity: MutableState<Boolean>) : Screen {
                 },
                     navigationIcon = {
                         IconButton(onClick = {
-                            finishActivity.value = true
+                            FinishActivityState.shouldFinish.value
                         }) {
 
                             Icon(

@@ -36,10 +36,12 @@ import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import goball.uz.R
+import goball.uz.helper.FinishActivityState
+import goball.uz.screens.MainScreen
 
-class MyStadiums(private val finishActivity: MutableState<Boolean>) : Screen {
+class MyStadiums: Screen {
+
     @OptIn(ExperimentalMaterial3Api::class)
-    @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     @Composable
     override fun Content() {
         val hasStadium by remember {
@@ -60,7 +62,7 @@ class MyStadiums(private val finishActivity: MutableState<Boolean>) : Screen {
                 },
                     navigationIcon = {
                         IconButton(onClick = {
-                            finishActivity.value=true
+                            FinishActivityState.shouldFinish.value = true
                         }) {
 
                             Icon(
@@ -72,10 +74,11 @@ class MyStadiums(private val finishActivity: MutableState<Boolean>) : Screen {
                     }
                 )
             }
-        ) {
+        ) {padding->
             Column(
                 modifier = Modifier
-                    .fillMaxSize(),
+                    .fillMaxSize()
+                    .padding(padding),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.SpaceEvenly
             ) {

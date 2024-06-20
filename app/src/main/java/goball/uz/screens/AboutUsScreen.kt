@@ -26,9 +26,10 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.Navigator
 import goball.uz.R
+import goball.uz.helper.FinishActivityState
 import goball.uz.screens.mystadium.MyStadiums
 
-class AboutUsScreen(private val finishActivity: MutableState<Boolean>) : Screen {
+class AboutUsScreen() : Screen {
     @OptIn(ExperimentalMaterial3Api::class)
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     @Composable
@@ -46,7 +47,7 @@ class AboutUsScreen(private val finishActivity: MutableState<Boolean>) : Screen 
 
                 },
                     navigationIcon = {
-                        IconButton(onClick = { finishActivity.value=true }) {
+                        IconButton(onClick = { FinishActivityState.shouldFinish.value = true  }) {
                             Icon(
                                 painter = painterResource(id = R.drawable.arrow_back),
                                 contentDescription = "Go back",
