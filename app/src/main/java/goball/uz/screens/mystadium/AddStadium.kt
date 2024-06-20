@@ -21,6 +21,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
@@ -46,6 +47,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
@@ -96,6 +98,7 @@ class AddStadium : Screen {
     fun AddingProcess(modifier: Modifier) {
         val context = LocalContext.current
         var textStadiumName by remember { mutableStateOf("") }
+        var textStadiumCost by remember { mutableStateOf("") }
         var selectedImageUris by remember {
             mutableStateOf<List<Uri>>(emptyList())
         }
@@ -234,7 +237,7 @@ class AddStadium : Screen {
                         value = textStadiumName,
                         placeholder = {
                             Text(
-                                "Stadium name",
+                                "Stadion nomi",
                                 style = MaterialTheme.typography.titleMedium,
                                 color = Color.Gray
                             )
@@ -249,6 +252,56 @@ class AddStadium : Screen {
                             disabledIndicatorColor = Color.Transparent,
                             containerColor = Color.Transparent,
                             cursorColor = Color.Gray
+                        ),
+                        maxLines = 1,
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+                    )
+                }
+            }
+            item {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(
+                            color = MaterialTheme.colorScheme.background,
+                            shape = RoundedCornerShape(8.dp)
+                        )
+                        .padding(top = 7.dp)
+                        .border(
+                            width = 1.3.dp,
+                            color = colorResource(id = R.color.gray),
+                            shape = RoundedCornerShape(14.dp)
+                        )
+                ) {
+                    TextField(
+                        value = textStadiumCost,
+                        leadingIcon = {
+                            Icon(
+                                painter = painterResource(id = R.drawable.price_gray),
+                                contentDescription = null
+                            )
+                        },
+                        maxLines = 1,
+                        placeholder = {
+                            Text(
+                                "Soatlik narxi (so'm)",
+                                style = MaterialTheme.typography.titleMedium,
+                                color = Color.Gray
+                            )
+                        },
+                        onValueChange = { textStadiumCost = it },
+                        textStyle = MaterialTheme.typography.titleMedium,
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        colors = TextFieldDefaults.textFieldColors(
+                            unfocusedIndicatorColor = Color.Transparent,
+                            focusedIndicatorColor = Color.Transparent,
+                            disabledIndicatorColor = Color.Transparent,
+                            containerColor = Color.Transparent,
+                            cursorColor = Color.Gray
+                        ),
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Number
                         )
                     )
                 }
