@@ -1,6 +1,5 @@
 package goball.uz.presentation
 
-import android.net.Uri
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -10,7 +9,6 @@ import goball.uz.models.TgToken
 import goball.uz.models.staium.StadiumListItem
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
 import kotlinx.coroutines.flow.receiveAsFlow
@@ -30,14 +28,6 @@ class StadiumsViewModel
 
     private val _isDataFetched = MutableStateFlow(false)
 
-    private val _selectedImageUris = MutableStateFlow<List<Uri>>(emptyList())
-    val selectedImageUris: StateFlow<List<Uri>> = _selectedImageUris
-
-    fun setImageUris(uris: List<Uri>) {
-        viewModelScope.launch {
-            _selectedImageUris.value = uris
-        }
-    }
 
     init {
         fetchStadiums()
