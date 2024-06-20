@@ -49,14 +49,7 @@ class Yandex : AppCompatActivity() {
     private lateinit var headerBinding: NavHeaderBinding
     private lateinit var mapView: MapView
     private val stadiumsViewModel: StadiumsViewModel by viewModels()
-    private val placeMarkTapListener = MapObjectTapListener { id, point ->
-        Toast.makeText(
-            this@Yandex,
-            "Tapped the point (${point.longitude}, ${point.latitude})",
-            Toast.LENGTH_SHORT
-        ).show()
-        true
-    }
+
     private val lat = 41.2995
     private val long = 69.2401
     private var stadiumsCount = 0

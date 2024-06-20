@@ -26,8 +26,15 @@ class StadiumsViewModel
     private val _showErrorChannel = Channel<Boolean>()
     val showErrorToastChannel = _showErrorChannel.receiveAsFlow()
 
+    private val _isDataFetched = MutableStateFlow(false)
 
     init {
+        fetchStadiums()
+    }
+
+    private fun fetchStadiums() {
+        if (_isDataFetched.value) return
+
         viewModelScope.launch {
             repository.getStadiumsList().collectLatest { result ->
                 when (result) {
@@ -40,7 +47,8 @@ class StadiumsViewModel
                         result.data?.let { stadium ->
                             Log.d("StadiumsViewModel", "Fetched stadiums: $stadium")
                             _stadiums.update { stadium }
-                        }?:Log.e("StadiumsViewModel", "Fetched stadiums data is null")
+                            _isDataFetched.value = true // Mark data as fetched
+                        } ?: Log.e("StadiumsViewModel", "Fetched stadiums data is null")
                     }
                 }
             }

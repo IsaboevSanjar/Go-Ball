@@ -52,8 +52,8 @@ class StartScreen : Screen {
                 verticalArrangement = Arrangement.Center
             ) {
                 Image(
-                    modifier = Modifier.size(140.dp),
-                    painter = painterResource(id = R.drawable.ic_launcher_background),
+                    modifier = Modifier.size(200.dp),
+                    painter = painterResource(id = R.drawable.logo_with_shadow),
                     contentDescription = "Logo"
                 )
                 Spacer(modifier = Modifier.size(20.dp))
