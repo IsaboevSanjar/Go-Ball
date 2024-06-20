@@ -76,10 +76,9 @@
         android:layout_width="wrap_content"
         android:layout_height="match_parent"
         android:layout_gravity="start"
-        android:layout_marginBottom="20dp"
-        android:layout_marginTop="35dp"
         android:background="@drawable/rounded_drawer_background"
         android:fitsSystemWindows="true"
+        android:layout_marginBottom="5dp"
         app:headerLayout="@layout/nav_header"
         app:itemIconTint="@color/black"
         app:itemTextAppearance="@style/JakartaTextViewStyle"
@@ -91,7 +90,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom"
-            android:layout_marginBottom="10dp"
+            android:layout_marginBottom="15dp"
             android:orientation="horizontal"
             android:padding="16dp">
 

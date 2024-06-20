@@ -9,6 +9,7 @@ import android.graphics.BitmapFactory
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
+import android.view.View
 import android.widget.Toast
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.viewModels
@@ -16,7 +17,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.core.view.GravityCompat
 import androidx.core.view.ViewCompat
+import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
+import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.lifecycleScope
 import cafe.adriel.voyager.navigator.Navigator
 import com.yandex.mapkit.Animation
@@ -63,7 +66,13 @@ class Yandex : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         MapKitFactory.setApiKey("42c1c9b7-5b9f-4fc3-92f0-efcc45ec8dd6")
         super.onCreate(savedInstanceState)
-        enableEdgeToEdge()
+        //enableEdgeToEdge()
+        // Make the app content extend into the system bars
+        WindowCompat.setDecorFitsSystemWindows(window, false)
+        // Hide the system bars
+        val insetsController = WindowInsetsControllerCompat(window, window.decorView)
+        insetsController.hide(WindowInsetsCompat.Type.systemBars())
+        insetsController.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         binding = ActivityYandexBinding.inflate(layoutInflater)
         val view = binding.root
         headerBinding = NavHeaderBinding.bind(binding.navigationView.getHeaderView(0))
