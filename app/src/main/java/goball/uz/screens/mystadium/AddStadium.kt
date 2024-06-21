@@ -103,6 +103,7 @@ class AddStadium : Screen {
         val context = LocalContext.current
         var textStadiumName by remember { mutableStateOf("") }
         var textStadiumCost by remember { mutableStateOf("") }
+        var textStadiumPhoneNumber by remember { mutableStateOf("") }
         var textVerticalLength by remember { mutableStateOf("") }
         var textHorizontalLength by remember { mutableStateOf("") }
         var selectedImageUris by remember {
@@ -529,6 +530,56 @@ class AddStadium : Screen {
 
                 }
 
+            }
+            item {
+                Spacer(modifier = Modifier.size(14.dp))
+            }
+            item {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .background(
+                            color = MaterialTheme.colorScheme.background,
+                            shape = RoundedCornerShape(8.dp)
+                        )
+                        .border(
+                            width = 1.3.dp,
+                            color = colorResource(id = R.color.gray),
+                            shape = RoundedCornerShape(14.dp)
+                        )
+                ) {
+                    TextField(
+                        value = textStadiumPhoneNumber,
+                        leadingIcon = {
+                            Icon(
+                                painter = painterResource(id = R.drawable.phone_icon),
+                                contentDescription = null
+                            )
+                        },
+                        maxLines = 1,
+                        placeholder = {
+                            Text(
+                                "Telefon raqam",
+                                style = MaterialTheme.typography.titleMedium,
+                                color = Color.Gray
+                            )
+                        },
+                        onValueChange = { textStadiumPhoneNumber = it },
+                        textStyle = MaterialTheme.typography.titleMedium,
+                        modifier = Modifier
+                            .fillMaxWidth(),
+                        colors = TextFieldDefaults.textFieldColors(
+                            unfocusedIndicatorColor = Color.Transparent,
+                            focusedIndicatorColor = Color.Transparent,
+                            disabledIndicatorColor = Color.Transparent,
+                            containerColor = Color.Transparent,
+                            cursorColor = Color.Gray
+                        ),
+                        keyboardOptions = KeyboardOptions(
+                            keyboardType = KeyboardType.Phone
+                        )
+                    )
+                }
             }
         }
         MaterialDialog(
