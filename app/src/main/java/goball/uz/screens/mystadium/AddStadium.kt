@@ -472,7 +472,7 @@ class AddStadium : Screen {
                                     text = "Ochilish vaqti",
                                     style = MaterialTheme.typography.titleMedium,
                                     modifier = Modifier.padding(
-                                        vertical = 16.dp,
+                                        vertical = 18.dp,
                                         horizontal = 5.dp
                                     ),
                                     color = Color.Gray
@@ -482,7 +482,7 @@ class AddStadium : Screen {
                                     text = "$pickedStartTime",
                                     style = MaterialTheme.typography.titleMedium,
                                     modifier = Modifier.padding(
-                                        vertical = 16.dp,
+                                        vertical = 18.dp,
                                         horizontal = 5.dp
                                     ),
                                     color = Color.Black
@@ -513,14 +513,14 @@ class AddStadium : Screen {
                             Text(
                                 text = "Yopilish vaqti",
                                 style = MaterialTheme.typography.titleMedium,
-                                modifier = Modifier.padding(vertical = 16.dp),
+                                modifier = Modifier.padding(vertical = 18.dp),
                                 color = Color.Gray
                             )
                         } else {
                             Text(
                                 text = "$pickedEndTime",
                                 style = MaterialTheme.typography.titleMedium,
-                                modifier = Modifier.padding(vertical = 16.dp),
+                                modifier = Modifier.padding(vertical = 18.dp),
                                 color = Color.Black
                             )
                         }
@@ -569,5 +569,6 @@ class AddStadium : Screen {
                 pickedEndTime = it
             }
         }
+        // TODO: After selecting time we should show the user the duration of the working hours as a warning 
     }
 }
