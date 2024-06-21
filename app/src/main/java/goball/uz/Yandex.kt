@@ -76,7 +76,7 @@ class Yandex : AppCompatActivity() {
         requestLocationPermission()
         showMap(mapView)
         setUpUserLocation()
-
+        setOnClickListeners()
         lifecycleScope.launch {
             stadiumsViewModel.stadiums.collectLatest { stadium ->
                 if (stadium.isNotEmpty()) {
@@ -87,6 +87,19 @@ class Yandex : AppCompatActivity() {
             }
         }
         // TODO: We need to set clickable to user location button
+    }
+
+    private fun setOnClickListeners() {
+        binding.logout.setOnClickListener {
+            binding.drawerLayout.closeDrawers()
+        }
+        headerBinding.closeDrawer.setOnClickListener {
+            binding.drawerLayout.closeDrawers()
+        }
+        binding.showStadiums.setOnClickListener {
+            val bottomSheet = ComposeBottomSheetDialogFragment(stadiumsViewModel)
+            bottomSheet.show(supportFragmentManager, bottomSheet.tag)
+        }
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -143,6 +156,7 @@ class Yandex : AppCompatActivity() {
         })
         mapKit.resetLocationManagerToDefault()
     }
+
     private fun addPlaceMarkToStadiums(stadiums: List<StadiumListItem>) {
         val bitmap = BitmapFactory.decodeResource(resources, R.drawable.stadium_marker)
         // Resize the bitmap to a desired size (adjust width and height as needed)
