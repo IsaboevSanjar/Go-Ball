@@ -462,21 +462,34 @@ class AddStadium : Screen {
                         horizontalAlignment = Alignment.CenterHorizontally,
                         verticalArrangement = Arrangement.Center
                     ) {
-                        if (!timeStartAlreadyPicked) {
-                            Text(
-                                text = "Ochilish vaqti",
-                                style = MaterialTheme.typography.titleMedium,
-                                modifier = Modifier.padding(vertical = 16.dp),
-                                color = Color.Gray
-                            )
-                        } else {
-                            Text(
-                                text = "$pickedStartTime",
-                                style = MaterialTheme.typography.titleMedium,
-                                modifier = Modifier.padding(vertical = 16.dp),
-                                color = Color.Black
-                            )
+                        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Start, modifier = Modifier.padding(start = 10.dp)) {
+                            Icon(
+                                painter = painterResource(id = R.drawable.clock_icon),
+                                contentDescription = "Clock icon",
+                                )
+                            if (!timeStartAlreadyPicked) {
+                                Text(
+                                    text = "Ochilish vaqti",
+                                    style = MaterialTheme.typography.titleMedium,
+                                    modifier = Modifier.padding(
+                                        vertical = 16.dp,
+                                        horizontal = 5.dp
+                                    ),
+                                    color = Color.Gray
+                                )
+                            } else {
+                                Text(
+                                    text = "$pickedStartTime",
+                                    style = MaterialTheme.typography.titleMedium,
+                                    modifier = Modifier.padding(
+                                        vertical = 16.dp,
+                                        horizontal = 5.dp
+                                    ),
+                                    color = Color.Black
+                                )
+                            }
                         }
+
 
                     }
                     Spacer(modifier = Modifier.size(10.dp))
