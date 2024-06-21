@@ -2,10 +2,12 @@ package goball.uz
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.content.ContentProviderClient
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.location.LocationManager
 import android.os.Bundle
 import android.util.Log
 import android.view.MenuItem
@@ -22,6 +24,8 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import androidx.lifecycle.lifecycleScope
 import cafe.adriel.voyager.navigator.Navigator
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.yandex.mapkit.Animation
 import com.yandex.mapkit.MapKit
 import com.yandex.mapkit.MapKitFactory
@@ -49,6 +53,8 @@ class Yandex : AppCompatActivity() {
     private lateinit var headerBinding: NavHeaderBinding
     private lateinit var mapView: MapView
     private val stadiumsViewModel: StadiumsViewModel by viewModels()
+    private var userLocationPoint: Point? = null
+    private lateinit var fusedLocationProviderClient: FusedLocationProviderClient
 
     private val lat = 41.2995
     private val long = 69.2401
@@ -73,10 +79,10 @@ class Yandex : AppCompatActivity() {
         MapKitFactory.initialize(this)
         setUpToolbar()
         mapView = binding.mapview
-        requestLocationPermission()
         showMap(mapView)
         setUpUserLocation()
         setOnClickListeners()
+        fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
         lifecycleScope.launch {
             stadiumsViewModel.stadiums.collectLatest { stadium ->
                 if (stadium.isNotEmpty()) {
@@ -86,7 +92,10 @@ class Yandex : AppCompatActivity() {
                 }
             }
         }
-        // TODO: We need to set clickable to user location button
+        binding.zoomUserCurrentLocation.setOnClickListener {
+            requestLocationPermission()
+            zoomToUserLocation()
+        }
     }
 
     private fun setOnClickListeners() {
@@ -152,10 +161,12 @@ class Yandex : AppCompatActivity() {
             }
 
             override fun onObjectRemoved(view: UserLocationView) {}
-            override fun onObjectUpdated(view: UserLocationView, event: ObjectEvent) {}
+            override fun onObjectUpdated(view: UserLocationView, event: ObjectEvent) {
+            }
         })
         mapKit.resetLocationManagerToDefault()
     }
+
 
     private fun addPlaceMarkToStadiums(stadiums: List<StadiumListItem>) {
         val bitmap = BitmapFactory.decodeResource(resources, R.drawable.stadium_marker)
@@ -192,8 +203,11 @@ class Yandex : AppCompatActivity() {
                     Manifest.permission.ACCESS_FINE_LOCATION,
                     Manifest.permission.ACCESS_COARSE_LOCATION
                 ),
-                1
+                100
             )
+        }
+        fusedLocationProviderClient.lastLocation.addOnSuccessListener { location ->
+            userLocationPoint = Point(location.latitude, location.longitude)
         }
     }
 
@@ -212,13 +226,20 @@ class Yandex : AppCompatActivity() {
     }
 
     private fun zoomToUserLocation() {
-        mapView.mapWindow.map.cameraPosition.target.let { userLocation ->
+        userLocationPoint?.let { userLocation ->
             mapView.mapWindow.map.move(
                 CameraPosition(userLocation, 15.0f, 0.0f, 0.0f),
                 Animation(Animation.Type.SMOOTH, 1f), null
             )
+        } ?: run {
+            Toast.makeText(
+                this,
+                "User location not available :$userLocationPoint",
+                Toast.LENGTH_SHORT
+            ).show()
         }
     }
+
 
     override fun onStart() {
         super.onStart()

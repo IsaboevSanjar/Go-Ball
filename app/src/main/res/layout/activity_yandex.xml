@@ -63,6 +63,24 @@
                         android:textSize="16sp"
                         android:textColor="@color/black"/>
                 </LinearLayout>
+                <androidx.cardview.widget.CardView
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:id="@+id/zoomUserCurrentLocation"
+                    android:layout_width="48dp"
+                    android:elevation="8dp"
+                    app:cardCornerRadius="48dp"
+                    app:layout_constraintTop_toTopOf="@id/show_stadiums"
+                    app:layout_constraintBottom_toBottomOf="@id/show_stadiums"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    android:layout_marginEnd="40dp"
+                    android:layout_height="48dp">
+                    <ImageView
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:src="@drawable/price_gray"
+                        android:padding="10dp"/>
+                </androidx.cardview.widget.CardView>
             </androidx.constraintlayout.widget.ConstraintLayout>
 
         </com.yandex.mapkit.mapview.MapView>
