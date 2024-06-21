@@ -12,6 +12,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -22,7 +23,6 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material3.Button
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -33,6 +33,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -41,18 +42,21 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import coil.compose.AsyncImage
+import com.vanpra.composematerialdialogs.MaterialDialog
+import com.vanpra.composematerialdialogs.datetime.time.timepicker
+import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import goball.uz.R
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 
 class AddStadium : Screen {
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -99,9 +103,35 @@ class AddStadium : Screen {
         val context = LocalContext.current
         var textStadiumName by remember { mutableStateOf("") }
         var textStadiumCost by remember { mutableStateOf("") }
+        var textVerticalLength by remember { mutableStateOf("") }
+        var textHorizontalLength by remember { mutableStateOf("") }
         var selectedImageUris by remember {
             mutableStateOf<List<Uri>>(emptyList())
         }
+
+        var pickedStartTime by remember {
+            mutableStateOf(LocalTime.NOON)
+        }
+        var pickedEndTime by remember {
+            mutableStateOf(LocalTime.NOON)
+        }
+
+        val formattedStartTime by remember {
+            derivedStateOf {
+                DateTimeFormatter
+                    .ofPattern("hh:mm")
+                    .format(pickedStartTime)
+            }
+        }
+        var timeStartAlreadyPicked by remember {
+            mutableStateOf(false)
+        }
+        var timeEndAlreadyPicked by remember {
+            mutableStateOf(false)
+        }
+        val timeDialogStateStart = rememberMaterialDialogState()
+        val timeDialogStateEnd = rememberMaterialDialogState()
+
         val imagePicker = rememberLauncherForActivityResult(
             contract = ActivityResultContracts.PickMultipleVisualMedia(),
             onResult = { uris ->
@@ -220,6 +250,9 @@ class AddStadium : Screen {
                 }
             }
             item {
+                Spacer(modifier = Modifier.size(7.dp))
+            }
+            item {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
@@ -257,6 +290,9 @@ class AddStadium : Screen {
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
                     )
                 }
+            }
+            item {
+                Spacer(modifier = Modifier.size(7.dp))
             }
             item {
                 Column(
@@ -306,8 +342,219 @@ class AddStadium : Screen {
                     )
                 }
             }
+            item {
+                Spacer(modifier = Modifier.size(7.dp))
+            }
+            item {
+                Row {
+                    Column(
+                        modifier = Modifier
+                            .weight(1.0F)
+                            .background(
+                                color = MaterialTheme.colorScheme.background,
+                                shape = RoundedCornerShape(8.dp)
+                            )
+                            .padding(top = 7.dp, end = 5.dp)
+                            .border(
+                                width = 1.3.dp,
+                                color = colorResource(id = R.color.gray),
+                                shape = RoundedCornerShape(14.dp)
+                            )
+                    ) {
+                        TextField(
+                            value = textVerticalLength,
+                            leadingIcon = {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.vertical_length),
+                                    contentDescription = null
+                                )
+                            },
+                            maxLines = 1,
+                            placeholder = {
+                                Text(
+                                    "Uzunligi metr",
+                                    style = MaterialTheme.typography.titleMedium,
+                                    color = Color.Gray
+                                )
+                            },
+                            onValueChange = { textVerticalLength = it },
+                            textStyle = MaterialTheme.typography.titleMedium,
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            colors = TextFieldDefaults.textFieldColors(
+                                unfocusedIndicatorColor = Color.Transparent,
+                                focusedIndicatorColor = Color.Transparent,
+                                disabledIndicatorColor = Color.Transparent,
+                                containerColor = Color.Transparent,
+                                cursorColor = Color.Gray
+                            ),
+                            keyboardOptions = KeyboardOptions(
+                                keyboardType = KeyboardType.Number
+                            )
+                        )
+                    }
+                    Column(
+                        modifier = Modifier
+                            .weight(1.0F)
+                            .background(
+                                color = MaterialTheme.colorScheme.background,
+                                shape = RoundedCornerShape(8.dp)
+                            )
+                            .padding(top = 7.dp, start = 5.dp)
+                            .border(
+                                width = 1.3.dp,
+                                color = colorResource(id = R.color.gray),
+                                shape = RoundedCornerShape(14.dp)
+                            )
+                    ) {
+                        TextField(
+                            value = textHorizontalLength,
+                            leadingIcon = {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.horizontal_length),
+                                    contentDescription = null
+                                )
+                            },
+                            maxLines = 1,
+                            placeholder = {
+                                Text(
+                                    "Eni metr",
+                                    style = MaterialTheme.typography.titleMedium,
+                                    color = Color.Gray
+                                )
+                            },
+                            onValueChange = { textHorizontalLength = it },
+                            textStyle = MaterialTheme.typography.titleMedium,
+                            modifier = Modifier
+                                .fillMaxWidth(),
+                            colors = TextFieldDefaults.textFieldColors(
+                                unfocusedIndicatorColor = Color.Transparent,
+                                focusedIndicatorColor = Color.Transparent,
+                                disabledIndicatorColor = Color.Transparent,
+                                containerColor = Color.Transparent,
+                                cursorColor = Color.Gray
+                            ),
+                            keyboardOptions = KeyboardOptions(
+                                keyboardType = KeyboardType.Number
+                            )
+                        )
+                    }
+                }
+            }
+            item {
+                Spacer(modifier = Modifier.size(14.dp))
+            }
+            item {
+                Row {
+                    Column(
+                        modifier = Modifier
+                            .weight(1.0F)
+                            .background(
+                                color = MaterialTheme.colorScheme.background,
+                                shape = RoundedCornerShape(8.dp)
+                            )
+                            .clickable { timeDialogStateStart.show() }
+                            .border(
+                                width = 1.3.dp,
+                                color = colorResource(id = R.color.gray),
+                                shape = RoundedCornerShape(14.dp)
+                            ),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        if (!timeStartAlreadyPicked) {
+                            Text(
+                                text = "Ochilish vaqti",
+                                style = MaterialTheme.typography.titleMedium,
+                                modifier = Modifier.padding(vertical = 16.dp),
+                                color = Color.Gray
+                            )
+                        } else {
+                            Text(
+                                text = "$pickedStartTime",
+                                style = MaterialTheme.typography.titleMedium,
+                                modifier = Modifier.padding(vertical = 16.dp),
+                                color = Color.Black
+                            )
+                        }
 
+                    }
+                    Spacer(modifier = Modifier.size(10.dp))
+                    Column(
+                        modifier = Modifier
+                            .weight(1.0F)
+                            .background(
+                                color = MaterialTheme.colorScheme.background,
+                                shape = RoundedCornerShape(8.dp)
+                            )
+                            .clickable { timeDialogStateEnd.show() }
+                            .border(
+                                width = 1.3.dp,
+                                color = colorResource(id = R.color.gray),
+                                shape = RoundedCornerShape(14.dp)
+                            ),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                        verticalArrangement = Arrangement.Center
+                    ) {
+                        if (!timeEndAlreadyPicked) {
+                            Text(
+                                text = "Yopilish vaqti",
+                                style = MaterialTheme.typography.titleMedium,
+                                modifier = Modifier.padding(vertical = 16.dp),
+                                color = Color.Gray
+                            )
+                        } else {
+                            Text(
+                                text = "$pickedEndTime",
+                                style = MaterialTheme.typography.titleMedium,
+                                modifier = Modifier.padding(vertical = 16.dp),
+                                color = Color.Black
+                            )
+                        }
+
+                    }
+
+                }
+
+            }
+        }
+        MaterialDialog(
+            dialogState = timeDialogStateStart,
+            buttons = {
+                positiveButton(text = "Tanlash") {
+                    Toast.makeText(context, "Tanlandi", Toast.LENGTH_SHORT).show()
+                    timeStartAlreadyPicked = true
+                }
+                negativeButton(text = "Bekor qilish") {
+                    timeStartAlreadyPicked = false
+                }
+            }
+        ) {
+            timepicker(
+                initialTime = LocalTime.NOON,
+                title = "Ochilish vaqtini kiriting",
+            ) {
+                pickedStartTime = it
+            }
+        }
+        MaterialDialog(
+            dialogState = timeDialogStateEnd,
+            buttons = {
+                positiveButton(text = "Tanlash") {
+                    Toast.makeText(context, "Tanlandi", Toast.LENGTH_SHORT).show()
+                    timeEndAlreadyPicked = true
+                }
+                negativeButton(text = "Bekor qilish") {
+                    timeEndAlreadyPicked = false
+                }
+            }
+        ) {
+            timepicker(
+                initialTime = LocalTime.NOON,
+                title = "Yopilish vaqtini kiriting",
+            ) {
+                pickedEndTime = it
+            }
         }
     }
-
 }

@@ -33,6 +33,7 @@ android {
         }
     }
     compileOptions {
+        isCoreLibraryDesugaringEnabled = true
         sourceCompatibility = JavaVersion.VERSION_1_8
         targetCompatibility = JavaVersion.VERSION_1_8
     }
@@ -121,5 +122,8 @@ dependencies {
     kapt("com.google.dagger:hilt-compiler:2.48")
     kapt("androidx.hilt:hilt-compiler:1.1.0")
     implementation("androidx.hilt:hilt-navigation-compose:1.1.0")
+    //Time picker
+    implementation ("io.github.vanpra.compose-material-dialogs:datetime:0.8.1-rc")
+    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs:1.1.6")
 
 }
