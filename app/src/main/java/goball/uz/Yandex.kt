@@ -59,34 +59,23 @@ class Yandex : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         MapKitFactory.setApiKey("42c1c9b7-5b9f-4fc3-92f0-efcc45ec8dd6")
         super.onCreate(savedInstanceState)
-        //enableEdgeToEdge()
         // Make the app content extend into the system bars
         WindowCompat.setDecorFitsSystemWindows(window, false)
         // Hide the system bars
         val insetsController = WindowInsetsControllerCompat(window, window.decorView)
         insetsController.hide(WindowInsetsCompat.Type.systemBars())
-        insetsController.systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+        insetsController.systemBarsBehavior =
+            WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
         binding = ActivityYandexBinding.inflate(layoutInflater)
         val view = binding.root
         headerBinding = NavHeaderBinding.bind(binding.navigationView.getHeaderView(0))
         setContentView(view)
         MapKitFactory.initialize(this)
-        val mapKit = MapKitFactory.getInstance()
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.drawer_layout)) { v, insets ->
-            val systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars())
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom)
-            insets
-        }
-        // Set up the toolbar with a drawer icon
-        setSupportActionBar(binding.toolbar)
-        supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        supportActionBar?.setHomeAsUpIndicator(R.drawable.oval_burger_menu)
-        navigationItemClick()
-
-        mapView = findViewById(R.id.mapview)
+        setUpToolbar()
+        mapView = binding.mapview
         requestLocationPermission()
         showMap(mapView)
-        userLocation(mapKit)
+        setUpUserLocation()
 
         lifecycleScope.launch {
             stadiumsViewModel.stadiums.collectLatest { stadium ->
@@ -97,6 +86,7 @@ class Yandex : AppCompatActivity() {
                 }
             }
         }
+        // TODO: We need to set clickable to user location button
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -108,60 +98,35 @@ class Yandex : AppCompatActivity() {
         }
     }
 
-    // Handle navigation item clicks
-    @SuppressLint("SetTextI18n")
-    private fun navigationItemClick() {
-        binding.showStadiums.setOnClickListener {
-            val bottomSheet = ComposeBottomSheetDialogFragment(stadiumsViewModel)
-            Toast.makeText(this, "$stadiumsCount", Toast.LENGTH_SHORT).show()
-            bottomSheet.show(supportFragmentManager, bottomSheet.tag)
-        }
-        binding.logout.setOnClickListener {
-            binding.drawerLayout.closeDrawers()
-        }
-        headerBinding.closeDrawer.setOnClickListener {
-            binding.drawerLayout.closeDrawers()
-        }
+    private fun setUpToolbar() {
+        setSupportActionBar(binding.toolbar)
+        supportActionBar?.setDisplayHomeAsUpEnabled(true)
+        supportActionBar?.setHomeAsUpIndicator(R.drawable.oval_burger_menu)
         binding.navigationView.setNavigationItemSelectedListener { menuItem ->
             val intent = Intent(this, ComposeActivity::class.java)
             when (menuItem.itemId) {
-                R.id.my_stadiums -> {
-                    Toast.makeText(this, "My Stadium", Toast.LENGTH_SHORT).show()
-                    intent.putExtra("menu_item", 1)
-                    intent.putExtra("menu_text", menuItem.title)
-                }
-
-                R.id.settings -> {
-                    Toast.makeText(this, "Settings", Toast.LENGTH_SHORT).show()
-                    intent.putExtra("menu_item", 2)
-                    intent.putExtra("menu_text", menuItem.title)
-                    /*setContent {
-                        val navigator = LocalNavigator.current
-                        GoBallTheme {
-                            navigator?.push(LoginScreen())
-                        }
-                    }*/
-                }
-
-                R.id.about_us -> {
-                    Toast.makeText(this, "About us", Toast.LENGTH_SHORT).show()
-                    intent.putExtra("menu_item", 3)
-                    intent.putExtra("menu_text", menuItem.title)
-                }
-
-                R.id.help -> {
-                    Toast.makeText(this, "Help", Toast.LENGTH_SHORT).show()
-                    intent.putExtra("menu_item", 4)
-                    intent.putExtra("menu_text", menuItem.title)
-                }
+                R.id.my_stadiums -> showToastAndNavigate(menuItem, intent, 1)
+                R.id.settings -> showToastAndNavigate(menuItem, intent, 2)
+                R.id.about_us -> showToastAndNavigate(menuItem, intent, 3)
+                R.id.help -> showToastAndNavigate(menuItem, intent, 4)
             }
-            startActivity(intent)
             binding.drawerLayout.closeDrawers()
             true
         }
     }
 
-    private fun userLocation(mapKit: MapKit) {
+    private fun showToastAndNavigate(
+        menuItem: MenuItem,
+        intent: Intent,
+        menuItemId: Int
+    ) {
+        intent.putExtra("menu_item", menuItemId)
+        intent.putExtra("menu_text", menuItem.title)
+        startActivity(intent)
+    }
+
+    private fun setUpUserLocation() {
+        val mapKit = MapKitFactory.getInstance()
         val userLocation = mapKit.createUserLocationLayer(mapView.mapWindow)
         userLocation.isVisible = true
         userLocation.isHeadingEnabled = true
@@ -173,18 +138,11 @@ class Yandex : AppCompatActivity() {
                 view.arrow.setIcon(customIcon, iconStyle)
             }
 
-            override fun onObjectRemoved(p0: UserLocationView) {
-
-            }
-
-            override fun onObjectUpdated(p0: UserLocationView, p1: ObjectEvent) {
-
-            }
-
+            override fun onObjectRemoved(view: UserLocationView) {}
+            override fun onObjectUpdated(view: UserLocationView, event: ObjectEvent) {}
         })
         mapKit.resetLocationManagerToDefault()
     }
-
     private fun addPlaceMarkToStadiums(stadiums: List<StadiumListItem>) {
         val bitmap = BitmapFactory.decodeResource(resources, R.drawable.stadium_marker)
         // Resize the bitmap to a desired size (adjust width and height as needed)
@@ -222,9 +180,9 @@ class Yandex : AppCompatActivity() {
                 ),
                 1
             )
-            return
         }
     }
+
 
     private fun showMap(mapView: MapView) {
         mapView.mapWindow.map.move(
@@ -239,6 +197,15 @@ class Yandex : AppCompatActivity() {
 
     }
 
+    private fun zoomToUserLocation() {
+        mapView.mapWindow.map.cameraPosition.target.let { userLocation ->
+            mapView.mapWindow.map.move(
+                CameraPosition(userLocation, 15.0f, 0.0f, 0.0f),
+                Animation(Animation.Type.SMOOTH, 1f), null
+            )
+        }
+    }
+
     override fun onStart() {
         super.onStart()
         mapView.onStart()
@@ -249,16 +216,5 @@ class Yandex : AppCompatActivity() {
         mapView.onStop()
         MapKitFactory.getInstance().onStop()
         super.onStop()
-    }
-
-    companion object {
-        private val POINT = Point(41.2995, 69.2401)
-        private val POSITION = CameraPosition(
-            POINT,
-            13.0f,
-            0.0f,
-            30.0f
-        )
-
     }
 }

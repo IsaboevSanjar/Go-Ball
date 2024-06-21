@@ -44,7 +44,7 @@ class HelpScreen() : Screen {
                 },
                     navigationIcon = {
                         IconButton(onClick = {
-                            FinishActivityState.shouldFinish.value
+                            FinishActivityState.shouldFinish.value=true
                         }) {
 
                             Icon(
