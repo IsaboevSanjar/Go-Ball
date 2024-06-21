@@ -80,7 +80,6 @@ class Yandex : AppCompatActivity() {
         setUpToolbar()
         mapView = binding.mapview
         showMap(mapView)
-        setUpUserLocation()
         setOnClickListeners()
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(this)
         lifecycleScope.launch {
@@ -147,26 +146,6 @@ class Yandex : AppCompatActivity() {
         startActivity(intent)
     }
 
-    private fun setUpUserLocation() {
-        val mapKit = MapKitFactory.getInstance()
-        val userLocation = mapKit.createUserLocationLayer(mapView.mapWindow)
-        userLocation.isVisible = true
-        userLocation.isHeadingEnabled = true
-        val iconStyle = IconStyle().setScale(0.2f)
-        val customIcon = ImageProvider.fromResource(this, R.drawable.current_location)
-        userLocation.setObjectListener(object : UserLocationObjectListener {
-            override fun onObjectAdded(view: UserLocationView) {
-                view.pin.setIcon(customIcon, iconStyle)
-                view.arrow.setIcon(customIcon, iconStyle)
-            }
-
-            override fun onObjectRemoved(view: UserLocationView) {}
-            override fun onObjectUpdated(view: UserLocationView, event: ObjectEvent) {
-            }
-        })
-        mapKit.resetLocationManagerToDefault()
-    }
-
 
     private fun addPlaceMarkToStadiums(stadiums: List<StadiumListItem>) {
         val bitmap = BitmapFactory.decodeResource(resources, R.drawable.stadium_marker)
@@ -205,10 +184,19 @@ class Yandex : AppCompatActivity() {
                 ),
                 100
             )
+        } else {
+            if (isLocationEnabled()) {
+                fusedLocationProviderClient.lastLocation.addOnSuccessListener { location ->
+                    if (location != null) {
+                        userLocationPoint = Point(location.latitude, location.longitude)
+                        zoomToUserLocation() // Zoom to location once permission is granted
+                    }
+                }
+            } else {
+                promptEnableLocation()
+            }
         }
-        fusedLocationProviderClient.lastLocation.addOnSuccessListener { location ->
-            userLocationPoint = Point(location.latitude, location.longitude)
-        }
+
     }
 
 
@@ -240,6 +228,18 @@ class Yandex : AppCompatActivity() {
         }
     }
 
+
+    private fun isLocationEnabled(): Boolean {
+        val locationManager = getSystemService(LOCATION_SERVICE) as LocationManager
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER) ||
+                locationManager.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
+    }
+
+    private fun promptEnableLocation() {
+        Toast.makeText(this, "Please enable location services", Toast.LENGTH_SHORT).show()
+        val intent = Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS)
+        startActivity(intent)
+    }
 
     override fun onStart() {
         super.onStart()
