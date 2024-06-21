@@ -93,7 +93,6 @@ class Yandex : AppCompatActivity() {
         }
         binding.zoomUserCurrentLocation.setOnClickListener {
             requestLocationPermission()
-            zoomToUserLocation()
         }
     }
 
@@ -165,7 +164,7 @@ class Yandex : AppCompatActivity() {
         }
     }
 
-    //Taking user permission to use their location in this app
+    // Taking user permission to use their location in this app
     private fun requestLocationPermission() {
         if (ActivityCompat.checkSelfPermission(
                 this,
@@ -189,14 +188,18 @@ class Yandex : AppCompatActivity() {
                 fusedLocationProviderClient.lastLocation.addOnSuccessListener { location ->
                     if (location != null) {
                         userLocationPoint = Point(location.latitude, location.longitude)
+                        Log.d("YandexLat", "Location obtained: $userLocationPoint")
                         zoomToUserLocation() // Zoom to location once permission is granted
+                    } else {
+                        Log.d("YandexLat", "Location is null")
                     }
+                }.addOnFailureListener {
+                    Log.d("YandexLat", "Failed to get location", it)
                 }
             } else {
                 promptEnableLocation()
             }
         }
-
     }
 
 
@@ -219,14 +222,17 @@ class Yandex : AppCompatActivity() {
                 CameraPosition(userLocation, 15.0f, 0.0f, 0.0f),
                 Animation(Animation.Type.SMOOTH, 1f), null
             )
+            Log.d("YandexLat", "Zooming to user location: $userLocation")
         } ?: run {
             Toast.makeText(
                 this,
-                "User location not available :$userLocationPoint",
+                "User location not available: $userLocationPoint",
                 Toast.LENGTH_SHORT
             ).show()
+            Log.d("YandexLat", "User location not available: $userLocationPoint")
         }
     }
+
 
 
     private fun isLocationEnabled(): Boolean {
