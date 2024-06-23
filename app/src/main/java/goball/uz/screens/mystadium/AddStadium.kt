@@ -636,55 +636,95 @@ class AddStadium : Screen {
         MaterialDialog(
             dialogState = timeDialogStateStart,
             buttons = {
-                positiveButton(text = "Tanlash", textStyle = MaterialTheme.typography.bodySmall) {
+                positiveButton(
+                    text = "Tanlash",
+                    textStyle = MaterialTheme.typography.bodySmall
+                ) {
                     timeStartAlreadyPicked = true
                 }
                 negativeButton(
                     text = "Bekor qilish",
-                    textStyle = MaterialTheme.typography.bodySmall,
-
+                    textStyle = MaterialTheme.typography.bodySmall
                 ) {
                     timeStartAlreadyPicked = false
                 }
-
             },
         ) {
-            timepicker(
-                initialTime = LocalTime.NOON,
-                title = "Ochilish vaqtini kiriting",
-                colors = com.vanpra.composematerialdialogs.datetime.time.TimePickerDefaults.colors(
-                    activeBackgroundColor = colorResource(id = R.color.primary_light),
-                    headerTextColor = Color.Black,
-                    inactiveBackgroundColor = colorResource(id = R.color.gray),
-                    activeTextColor = Color.White,
-                    borderColor = Color.Gray,
-                    selectorColor = colorResource(id = R.color.primary),
-                    inactivePeriodBackground = colorResource(id = R.color.gray),
-                    inactiveTextColor = Color.Black,
-                    selectorTextColor = Color.White
-                ),
-                is24HourClock = true,
-            ) {
-                pickedStartTime = it
+            Column (modifier=Modifier.fillMaxWidth()){
+                // Custom Title
+                Text(
+                    text = "Yopilish vaqtini kiriting",
+                    style = MaterialTheme.typography.headlineMedium,
+                    color = Color.Black,  // Customize this color
+                    modifier=Modifier.padding(16.dp)
+                )
+
+                // TimePicker
+                timepicker(
+                    initialTime = LocalTime.NOON,
+                    title = "",
+                    colors = com.vanpra.composematerialdialogs.datetime.time.TimePickerDefaults.colors(
+                        activeBackgroundColor = colorResource(id = R.color.primary_light),
+                        headerTextColor = Color.Black,
+                        inactiveBackgroundColor = colorResource(id = R.color.gray),
+                        activeTextColor = Color.White,
+                        borderColor = Color.Gray,
+                        selectorColor = colorResource(id = R.color.primary),
+                        inactivePeriodBackground = colorResource(id = R.color.gray),
+                        inactiveTextColor = Color.Black,
+                        selectorTextColor = Color.White
+                    ),
+                    is24HourClock = true,
+                ) {
+                    pickedStartTime = it
+                }
             }
         }
         MaterialDialog(
             dialogState = timeDialogStateEnd,
             buttons = {
-                positiveButton(text = "Tanlash") {
-                    Toast.makeText(context, "Tanlandi", Toast.LENGTH_SHORT).show()
+                positiveButton(
+                    text = "Tanlash",
+                    textStyle = MaterialTheme.typography.bodySmall
+                ) {
                     timeEndAlreadyPicked = true
                 }
-                negativeButton(text = "Bekor qilish") {
+                negativeButton(
+                    text = "Bekor qilish",
+                    textStyle = MaterialTheme.typography.bodySmall
+                ) {
                     timeEndAlreadyPicked = false
                 }
-            }
+            },
         ) {
-            timepicker(
-                initialTime = LocalTime.NOON,
-                title = "Yopilish vaqtini kiriting",
-            ) {
-                pickedEndTime = it
+            Column (modifier=Modifier.fillMaxWidth()){
+                // Custom Title
+                Text(
+                    text = "Yopilish vaqtini kiriting",
+                    style = MaterialTheme.typography.headlineMedium,
+                    color = Color.Black,  // Customize this color
+                    modifier=Modifier.padding(16.dp)
+                )
+
+                // TimePicker
+                timepicker(
+                    initialTime = LocalTime.NOON,
+                    title = "",
+                    colors = com.vanpra.composematerialdialogs.datetime.time.TimePickerDefaults.colors(
+                        activeBackgroundColor = colorResource(id = R.color.primary_light),
+                        headerTextColor = Color.Black,
+                        inactiveBackgroundColor = colorResource(id = R.color.gray),
+                        activeTextColor = Color.White,
+                        borderColor = Color.Gray,
+                        selectorColor = colorResource(id = R.color.primary),
+                        inactivePeriodBackground = colorResource(id = R.color.gray),
+                        inactiveTextColor = Color.Black,
+                        selectorTextColor = Color.White
+                    ),
+                    is24HourClock = true,
+                ) {
+                    pickedEndTime = it
+                }
             }
         }
         // TODO: After selecting time we should show the user the duration of the working hours as a warning 
