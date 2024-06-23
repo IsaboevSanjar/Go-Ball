@@ -12,21 +12,32 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentSize
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.KeyboardArrowDown
+import androidx.compose.material.icons.outlined.KeyboardArrowUp
+import androidx.compose.material3.DropdownMenu
+import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedCard
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
@@ -48,6 +59,7 @@ import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.PopupProperties
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import coil.compose.AsyncImage
@@ -55,6 +67,7 @@ import com.vanpra.composematerialdialogs.MaterialDialog
 import com.vanpra.composematerialdialogs.datetime.time.timepicker
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import goball.uz.R
+import java.time.Duration
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
@@ -117,6 +130,16 @@ class AddStadium : Screen {
             mutableStateOf(LocalTime.NOON)
         }
 
+        val workingDuration by remember {
+            derivedStateOf {
+                Duration.between(pickedStartTime, pickedEndTime).let {
+                    val hours = it.toHours()
+                    val minutes = it.toMinutes() % 60
+                    String.format("%d soat va  %d minut", hours, minutes)
+                }
+            }
+        }
+
         val formattedStartTime by remember {
             derivedStateOf {
                 DateTimeFormatter
@@ -132,7 +155,8 @@ class AddStadium : Screen {
         }
         val timeDialogStateStart = rememberMaterialDialogState()
         val timeDialogStateEnd = rememberMaterialDialogState()
-
+        val options = listOf("Ommaviy", "Cheklangan")
+        var selectedOptionText by remember { mutableStateOf(options[0]) }
         val imagePicker = rememberLauncherForActivityResult(
             contract = ActivityResultContracts.PickMultipleVisualMedia(),
             onResult = { uris ->
@@ -147,6 +171,7 @@ class AddStadium : Screen {
                 }
             }
         )
+        
 
         LazyColumn(modifier.padding(16.dp)) {
             item {
@@ -446,88 +471,103 @@ class AddStadium : Screen {
                 Spacer(modifier = Modifier.size(14.dp))
             }
             item {
-                Row {
-                    Column(
-                        modifier = Modifier
-                            .weight(1.0F)
-                            .background(
-                                color = MaterialTheme.colorScheme.background,
-                                shape = RoundedCornerShape(8.dp)
-                            )
-                            .clickable { timeDialogStateStart.show() }
-                            .border(
-                                width = 1.3.dp,
-                                color = colorResource(id = R.color.gray),
-                                shape = RoundedCornerShape(14.dp)
-                            ),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
-                    ) {
-                        Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.Start, modifier = Modifier.padding(start = 10.dp)) {
-                            Icon(
-                                painter = painterResource(id = R.drawable.clock_icon),
-                                contentDescription = "Clock icon",
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    Row {
+                        Column(
+                            modifier = Modifier
+                                .weight(1.0F)
+                                .background(
+                                    color = MaterialTheme.colorScheme.background,
+                                    shape = RoundedCornerShape(8.dp)
                                 )
-                            if (!timeStartAlreadyPicked) {
+                                .clickable { timeDialogStateStart.show() }
+                                .border(
+                                    width = 1.3.dp,
+                                    color = colorResource(id = R.color.gray),
+                                    shape = RoundedCornerShape(14.dp)
+                                ),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            Row(
+                                verticalAlignment = Alignment.CenterVertically,
+                                horizontalArrangement = Arrangement.Start,
+                                modifier = Modifier.padding(start = 10.dp)
+                            ) {
+                                Icon(
+                                    painter = painterResource(id = R.drawable.clock_icon),
+                                    contentDescription = "Clock icon",
+                                )
+                                if (!timeStartAlreadyPicked) {
+                                    Text(
+                                        text = "Ochilish vaqti",
+                                        style = MaterialTheme.typography.titleMedium,
+                                        modifier = Modifier.padding(
+                                            vertical = 18.dp,
+                                            horizontal = 5.dp
+                                        ),
+                                        color = Color.Gray
+                                    )
+                                } else {
+                                    Text(
+                                        text = "$pickedStartTime dan",
+                                        style = MaterialTheme.typography.titleMedium,
+                                        modifier = Modifier.padding(
+                                            vertical = 18.dp,
+                                            horizontal = 5.dp
+                                        ),
+                                        color = Color.Black
+                                    )
+                                }
+                            }
+
+
+                        }
+                        Spacer(modifier = Modifier.size(10.dp))
+                        Column(
+                            modifier = Modifier
+                                .weight(1.0F)
+                                .background(
+                                    color = MaterialTheme.colorScheme.background,
+                                    shape = RoundedCornerShape(8.dp)
+                                )
+                                .clickable { timeDialogStateEnd.show() }
+                                .border(
+                                    width = 1.3.dp,
+                                    color = colorResource(id = R.color.gray),
+                                    shape = RoundedCornerShape(14.dp)
+                                ),
+                            horizontalAlignment = Alignment.CenterHorizontally,
+                            verticalArrangement = Arrangement.Center
+                        ) {
+                            if (!timeEndAlreadyPicked) {
                                 Text(
-                                    text = "Ochilish vaqti",
+                                    text = "Yopilish vaqti",
                                     style = MaterialTheme.typography.titleMedium,
-                                    modifier = Modifier.padding(
-                                        vertical = 18.dp,
-                                        horizontal = 5.dp
-                                    ),
+                                    modifier = Modifier.padding(vertical = 18.dp),
                                     color = Color.Gray
                                 )
                             } else {
                                 Text(
-                                    text = "$pickedStartTime",
+                                    text = "$pickedEndTime gacha",
                                     style = MaterialTheme.typography.titleMedium,
-                                    modifier = Modifier.padding(
-                                        vertical = 18.dp,
-                                        horizontal = 5.dp
-                                    ),
+                                    modifier = Modifier.padding(vertical = 18.dp),
                                     color = Color.Black
                                 )
                             }
+
                         }
 
-
                     }
-                    Spacer(modifier = Modifier.size(10.dp))
-                    Column(
-                        modifier = Modifier
-                            .weight(1.0F)
-                            .background(
-                                color = MaterialTheme.colorScheme.background,
-                                shape = RoundedCornerShape(8.dp)
-                            )
-                            .clickable { timeDialogStateEnd.show() }
-                            .border(
-                                width = 1.3.dp,
-                                color = colorResource(id = R.color.gray),
-                                shape = RoundedCornerShape(14.dp)
+                    if (timeStartAlreadyPicked && timeEndAlreadyPicked) {
+                        Text(
+                            text = "Ish vaqti $pickedStartTime dan boshlab $pickedEndTime gacha ($workingDuration)",
+                            color = colorResource(
+                                id = R.color.primary
                             ),
-                        horizontalAlignment = Alignment.CenterHorizontally,
-                        verticalArrangement = Arrangement.Center
-                    ) {
-                        if (!timeEndAlreadyPicked) {
-                            Text(
-                                text = "Yopilish vaqti",
-                                style = MaterialTheme.typography.titleMedium,
-                                modifier = Modifier.padding(vertical = 18.dp),
-                                color = Color.Gray
-                            )
-                        } else {
-                            Text(
-                                text = "$pickedEndTime",
-                                style = MaterialTheme.typography.titleMedium,
-                                modifier = Modifier.padding(vertical = 18.dp),
-                                color = Color.Black
-                            )
-                        }
-
+                            style = MaterialTheme.typography.bodySmall
+                        )
                     }
-
                 }
 
             }
@@ -581,6 +621,17 @@ class AddStadium : Screen {
                     )
                 }
             }
+            item {
+                Spacer(modifier = Modifier.size(14.dp))
+            }
+            item {
+                SpinnerSample(
+                    list = options,
+                    preselected = options.first(),
+                    onSelectedChanged = { item -> selectedOptionText = item },
+                    modifier = Modifier.fillMaxWidth()
+                )
+            }
         }
         MaterialDialog(
             dialogState = timeDialogStateStart,
@@ -621,5 +672,83 @@ class AddStadium : Screen {
             }
         }
         // TODO: After selecting time we should show the user the duration of the working hours as a warning 
+    }
+
+    @Composable
+    private fun SpinnerSample(
+        list: List<String>,
+        preselected: String,
+        onSelectedChanged: (String) -> Unit,
+        modifier: Modifier = Modifier
+    ) {
+        var selected by remember { mutableStateOf(preselected) }
+        var expanded by remember { mutableStateOf(false) } // initial value
+        Box(modifier = modifier) {
+            OutlinedCard(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable {
+                        expanded = !expanded
+                    }
+            ) {
+                Row(
+                    horizontalArrangement = Arrangement.SpaceBetween,
+                    verticalAlignment = Alignment.CenterVertically,
+                    modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp)
+                ) {
+                    Text(
+                        text = selected,
+                        modifier = Modifier
+                            .weight(1f),
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                    if (!expanded) {
+                        Icon(
+                            Icons.Outlined.KeyboardArrowDown,
+                            contentDescription = null,
+                            modifier = Modifier.padding(8.dp)
+                        )
+                    } else {
+                        Icon(
+                            Icons.Outlined.KeyboardArrowUp,
+                            contentDescription = null,
+                            modifier = Modifier.padding(8.dp)
+                        )
+                    }
+                }
+            }
+
+            DropdownMenu(
+                expanded = expanded,
+                onDismissRequest = { expanded = false },
+                properties = PopupProperties(
+                    focusable = true,
+                    dismissOnBackPress = true,
+                    dismissOnClickOutside = true
+                ),
+                modifier = Modifier
+                    .wrapContentSize(align = Alignment.BottomEnd)
+                    .background(MaterialTheme.colorScheme.background)
+            ) {
+                list.forEach { listEntry ->
+                    DropdownMenuItem(
+                        text = {
+                            Text(
+                                text = listEntry,
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .align(Alignment.End),
+                                style = MaterialTheme.typography.titleMedium
+                            )
+                        },
+                        onClick = {
+                            selected = listEntry
+                            expanded = false
+                            onSelectedChanged(selected)
+                        }
+                    )
+                }
+            }
+        }
     }
 }
