@@ -171,7 +171,7 @@ class AddStadium : Screen {
                 }
             }
         )
-        
+
 
         LazyColumn(modifier.padding(16.dp)) {
             item {
@@ -636,18 +636,34 @@ class AddStadium : Screen {
         MaterialDialog(
             dialogState = timeDialogStateStart,
             buttons = {
-                positiveButton(text = "Tanlash") {
-                    Toast.makeText(context, "Tanlandi", Toast.LENGTH_SHORT).show()
+                positiveButton(text = "Tanlash", textStyle = MaterialTheme.typography.bodySmall) {
                     timeStartAlreadyPicked = true
                 }
-                negativeButton(text = "Bekor qilish") {
+                negativeButton(
+                    text = "Bekor qilish",
+                    textStyle = MaterialTheme.typography.bodySmall,
+
+                ) {
                     timeStartAlreadyPicked = false
                 }
-            }
+
+            },
         ) {
             timepicker(
                 initialTime = LocalTime.NOON,
                 title = "Ochilish vaqtini kiriting",
+                colors = com.vanpra.composematerialdialogs.datetime.time.TimePickerDefaults.colors(
+                    activeBackgroundColor = colorResource(id = R.color.primary_light),
+                    headerTextColor = Color.Black,
+                    inactiveBackgroundColor = colorResource(id = R.color.gray),
+                    activeTextColor = Color.White,
+                    borderColor = Color.Gray,
+                    selectorColor = colorResource(id = R.color.primary),
+                    inactivePeriodBackground = colorResource(id = R.color.gray),
+                    inactiveTextColor = Color.Black,
+                    selectorTextColor = Color.White
+                ),
+                is24HourClock = true,
             ) {
                 pickedStartTime = it
             }
