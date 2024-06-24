@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
@@ -116,6 +117,7 @@ class AddStadium : Screen {
         val navigator = LocalNavigator.current
         val context = LocalContext.current
         var textStadiumName by remember { mutableStateOf("") }
+        var textDescription by remember { mutableStateOf("") }
         var textStadiumCost by remember { mutableStateOf("") }
         var textStadiumPhoneNumber by remember { mutableStateOf("") }
         var textVerticalLength by remember { mutableStateOf("") }
@@ -692,6 +694,48 @@ class AddStadium : Screen {
                         text = "Xaritadan kiritish",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onBackground
+                    )
+                }
+            }
+            item {
+                Spacer(modifier = Modifier.size(14.dp))
+            }
+            item {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(200.dp)
+                        .background(
+                            color = MaterialTheme.colorScheme.background,
+                            shape = RoundedCornerShape(8.dp)
+                        )
+                        .border(
+                            width = 1.3.dp,
+                            color = colorResource(id = R.color.gray),
+                            shape = RoundedCornerShape(14.dp)
+                        )
+                ) {
+                    TextField(
+                        value = textDescription,
+                        placeholder = {
+                            Text(
+                                "Qo'shimcha ma'lumot",
+                                style = MaterialTheme.typography.titleMedium,
+                                color = Color.Gray
+                            )
+                        },
+                        onValueChange = { textDescription = it },
+                        textStyle = MaterialTheme.typography.titleMedium,
+                        modifier = Modifier
+                            .fillMaxSize(),
+                        colors = TextFieldDefaults.textFieldColors(
+                            unfocusedIndicatorColor = Color.Transparent,
+                            focusedIndicatorColor = Color.Transparent,
+                            disabledIndicatorColor = Color.Transparent,
+                            containerColor = Color.Transparent,
+                            cursorColor = Color.Gray
+                        ),
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
                     )
                 }
             }
