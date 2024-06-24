@@ -27,6 +27,15 @@ class LocationSelectionScreen(private val onLocationSelected: (latitude: Double,
     override fun Content() {
         val context = LocalContext.current
         var mapView by remember { mutableStateOf<MapView?>(null) }
+        DisposableEffect(Unit) {
+            MapKitFactory.initialize(context)
+            mapView = MapView(context)
+
+            onDispose {
+                mapView?.onStop()
+                MapKitFactory.getInstance().onStop()
+            }
+        }
 
         // Remember and initialize Yandex MapKit
         DisposableEffect(Unit) {
@@ -44,35 +53,45 @@ class LocationSelectionScreen(private val onLocationSelected: (latitude: Double,
                 MapKitFactory.getInstance().onStop()
             }
         }
-
-        Column(modifier = Modifier.fillMaxSize()) {
-            Box(modifier = Modifier.weight(1f)) {
-                mapView?.let { view ->
-                    AndroidView(factory = { view }, modifier = Modifier.fillMaxSize())
-                }
-                // Center icon
-                Image(
-                    painter = painterResource(id = R.drawable.stadium_marker),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .align(Alignment.Center)
-                        .size(70.dp)
-                        .padding(bottom = 8.dp)
-                )
+        mapView?.let {map->
+            LaunchedEffect(map) {
+                map.onStart()
             }
-            Button(
-                onClick = {
-                    mapView?.let {
-                        val centerPoint = it.map.cameraPosition.target
-                        onLocationSelected(centerPoint.latitude, centerPoint.longitude)
+            map.mapWindow.map.move(
+                CameraPosition(Point(41.315486, 69.260827), 14.0f, 0.0f, 0.0f),
+                com.yandex.mapkit.Animation(com.yandex.mapkit.Animation.Type.SMOOTH, 0f),
+                null
+            )
+            Column(modifier = Modifier.fillMaxSize()) {
+                Box(modifier = Modifier.weight(1f)) {
+                    mapView?.let { view ->
+                        AndroidView(factory = { view }, modifier = Modifier.fillMaxSize())
                     }
-                },
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-            ) {
-                Text("Tanlash")
+                    // Center icon
+                    Image(
+                        painter = painterResource(id = R.drawable.stadium_marker),
+                        contentDescription = null,
+                        modifier = Modifier
+                            .align(Alignment.Center)
+                            .size(70.dp)
+                            .padding(bottom = 8.dp)
+                    )
+                }
+                Button(
+                    onClick = {
+                        mapView?.let {
+                            val centerPoint = it.map.cameraPosition.target
+                            onLocationSelected(centerPoint.latitude, centerPoint.longitude)
+                        }
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                ) {
+                    Text("Tanlash")
+                }
             }
         }
+
     }
 }

@@ -113,6 +113,7 @@ class AddStadium : Screen {
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun AddingProcess(modifier: Modifier) {
+        val navigator = LocalNavigator.current
         val context = LocalContext.current
         var textStadiumName by remember { mutableStateOf("") }
         var textStadiumCost by remember { mutableStateOf("") }
@@ -631,6 +632,68 @@ class AddStadium : Screen {
                     onSelectedChanged = { item -> selectedOptionText = item },
                     modifier = Modifier.fillMaxWidth()
                 )
+            }
+            item {
+                Spacer(modifier = Modifier.size(14.dp))
+            }
+            item {
+                Column(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(
+                            color = MaterialTheme.colorScheme.background,
+                            shape = RoundedCornerShape(8.dp)
+                        )
+                        .border(
+                            width = 1.3.dp,
+                            color = colorResource(id = R.color.gray),
+                            shape = RoundedCornerShape(14.dp)
+                        )
+                        .clickable {
+                            navigator?.push(LocationSelectionScreen(onLocationSelected = { lat, lon ->
+                                Toast.makeText(context, "$lat && $lon", Toast.LENGTH_SHORT).show()
+                            }))
+                        }
+                        .padding(14.dp),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .size(45.dp)
+                            .background(
+                                color = MaterialTheme.colorScheme.background,
+                                shape = RoundedCornerShape(8.dp)
+                            )
+                            .border(
+                                width = 1.5.dp,
+                                color = colorResource(id = R.color.gray),
+                                shape = RoundedCornerShape(8.dp)
+                            )
+                            .padding(10.dp),
+                        verticalArrangement = Arrangement.Center,
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        AsyncImage(
+                            model = R.drawable.location_icon,
+                            contentDescription = "Upload location"
+                        )
+                    }
+                    Spacer(modifier = Modifier.size(7.dp))
+                    Text(
+                        text = "Stadion manzili",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = colorResource(
+                            id = R.color.primary
+                        )
+                    )
+                    Spacer(modifier = Modifier.size(7.dp))
+                    Text(
+                        text = "Xaritadan kiritish",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = MaterialTheme.colorScheme.onBackground
+                    )
+                }
             }
         }
         MaterialDialog(
