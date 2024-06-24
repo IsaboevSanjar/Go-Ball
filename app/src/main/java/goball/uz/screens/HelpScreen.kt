@@ -35,6 +35,7 @@ import com.vanpra.composematerialdialogs.datetime.time.timepicker
 import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import goball.uz.R
 import goball.uz.helper.FinishActivityState
+import goball.uz.screens.mystadium.LocationSelectionScreen
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 
@@ -45,6 +46,7 @@ class HelpScreen() : Screen {
     override fun Content() {
 
         val navigator = LocalNavigator.current
+        val context = LocalContext.current
         Scaffold(modifier = Modifier.fillMaxSize(),
             topBar = {
                 TopAppBar(title = {
@@ -69,47 +71,21 @@ class HelpScreen() : Screen {
                 )
             }
         ) {
-            var pickedStartTime by remember {
-                mutableStateOf(LocalTime.NOON)
-            }
-
-            val formattedStartTime by remember {
-                derivedStateOf {
-                    DateTimeFormatter
-                        .ofPattern("hh:mm")
-                        .format(pickedStartTime)
-                }
-            }
-            var textOpeningTime by remember {
-                mutableStateOf(formattedStartTime)
-            }
-            val timeDialogStateStart = rememberMaterialDialogState()
-            val context = LocalContext.current
             Column(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {
-                Button(onClick = { timeDialogStateStart.show() }) {
-
-                }
-                Text(text = formattedStartTime)
-                Spacer(modifier = Modifier.height(50.dp))
-            }
-            MaterialDialog(
-                dialogState = timeDialogStateStart,
-                buttons = {
-                    positiveButton(text = "Tanlash") {
-                        Toast.makeText(context, "Tanlandi", Toast.LENGTH_SHORT).show()
-                    }
-                    negativeButton(text = "Bekor qilish")
-                }
-            ) {
-                timepicker(
-                    initialTime = LocalTime.NOON,
-                    title = "Ochilish vaqtini kiriting",
-                ) {
-                    pickedStartTime = it
+                Text(text = "Stadion manzili haritada kiritish")
+                Spacer(modifier = Modifier.height(8.dp))
+                Button(onClick = {
+                    navigator?.push(LocationSelectionScreen(onLocationSelected = { lat, lon ->
+                        Toast.makeText(context, "$lat && $lon", Toast.LENGTH_SHORT).show()
+                    }))
+                }) {
+                    Text("Select Location")
                 }
             }
 
