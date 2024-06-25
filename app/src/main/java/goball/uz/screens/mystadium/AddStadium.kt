@@ -128,9 +128,6 @@ class AddStadium : Screen {
         var textStadiumPhoneNumber by remember { mutableStateOf("") }
         var textVerticalLength by remember { mutableStateOf("") }
         var textHorizontalLength by remember { mutableStateOf("") }
-        var selectedImageUris by remember {
-            mutableStateOf<List<Uri>>(emptyList())
-        }
 
 
         var pickedStartTime by remember {
@@ -159,6 +156,9 @@ class AddStadium : Screen {
         val timeDialogStateEnd = rememberMaterialDialogState()
         val options = listOf("Ommaviy", "Cheklangan")
         var selectedOptionText by remember { mutableStateOf(options[0]) }
+        var selectedImageUris by remember {
+            mutableStateOf<List<Uri>>(emptyList())
+        }
         val imagePicker = rememberLauncherForActivityResult(
             contract = ActivityResultContracts.PickMultipleVisualMedia(),
             onResult = { uris ->
@@ -264,10 +264,7 @@ class AddStadium : Screen {
                                         .size(24.dp)
                                         .align(Alignment.TopEnd)
                                         .clickable {
-
-                                            Toast
-                                                .makeText(context, "$uri", Toast.LENGTH_SHORT)
-                                                .show()
+                                            selectedImageUris=selectedImageUris.filterNot { it==uri }
                                         },
                                     contentScale = ContentScale.Crop
                                 )
