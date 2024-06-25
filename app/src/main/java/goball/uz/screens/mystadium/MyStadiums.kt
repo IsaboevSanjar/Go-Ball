@@ -117,7 +117,7 @@ class MyStadiums: Screen {
                         containerColor = colorResource(id = R.color.primary),
                         contentColor = Color.White
                     ),
-                    contentPadding = PaddingValues(vertical = 16.dp)
+                    contentPadding = PaddingValues(vertical = 18.dp)
                 ) {
                     if (!loading) {
                         Text(text = "Stadion qo'shish", style = MaterialTheme.typography.titleMedium)

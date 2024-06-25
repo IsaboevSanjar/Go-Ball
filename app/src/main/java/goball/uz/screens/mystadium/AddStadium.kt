@@ -28,6 +28,8 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.KeyboardArrowDown
 import androidx.compose.material.icons.outlined.KeyboardArrowUp
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
@@ -698,7 +700,7 @@ class AddStadium : Screen {
                 }
 
                 Text(
-                    text = "Lat: $selectedLatitude \n Lon: $selectedLongitude",
+                    text = "Lat: $selectedLatitude \nLon: $selectedLongitude",
                     color = colorResource(
                         id = R.color.primary
                     ),
@@ -745,6 +747,29 @@ class AddStadium : Screen {
                             cursorColor = Color.Gray
                         ),
                         keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
+                    )
+                }
+            }
+            item {
+                Spacer(modifier = Modifier.size(14.dp))
+            }
+            item {
+                Button(
+                    onClick = {
+                        Toast.makeText(context, "clicked", Toast.LENGTH_SHORT).show()
+                    },
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(bottom = 30.dp, top = 10.dp, start = 10.dp, end = 10.dp)
+                        .background(color = MaterialTheme.colorScheme.background),
+                    colors = ButtonDefaults.buttonColors(
+                        containerColor = colorResource(id = R.color.primary)
+                    )
+                ) {
+                    Text(
+                        text = "Qo'shish",
+                        style = MaterialTheme.typography.titleMedium,
+                        modifier = Modifier.padding(11.dp)
                     )
                 }
             }
