@@ -12,7 +12,6 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,9 +19,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentSize
-import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
@@ -34,7 +31,6 @@ import androidx.compose.material.icons.outlined.KeyboardArrowUp
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.ExperimentalMaterial3Api
-import androidx.compose.material3.ExposedDropdownMenuBox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -70,7 +66,6 @@ import com.vanpra.composematerialdialogs.rememberMaterialDialogState
 import goball.uz.R
 import java.time.Duration
 import java.time.LocalTime
-import java.time.format.DateTimeFormatter
 
 class AddStadium : Screen {
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -128,7 +123,7 @@ class AddStadium : Screen {
         var selectedLatitute by remember {
             mutableStateOf(0.0)
         }
-        var selectedLongitute by remember {
+        var selectedLongitude by remember {
             mutableStateOf(0.0)
         }
         var stadiumLocationIsPicked by remember {
@@ -658,7 +653,7 @@ class AddStadium : Screen {
                                     .makeText(context, "$lat && $lon", Toast.LENGTH_SHORT)
                                     .show()
                                 selectedLatitute = lat
-                                selectedLongitute = lon
+                                selectedLongitude = lon
                                 stadiumLocationIsPicked = true
                             }))
                         }
@@ -704,7 +699,7 @@ class AddStadium : Screen {
                 }
                 if (!stadiumLocationIsPicked) {
                     Text(
-                        text = "Lat: $selectedLatitute && Lon: $selectedLongitute",
+                        text = "Lat: $selectedLatitute && Lon: $selectedLongitude",
                         color = colorResource(
                             id = R.color.primary
                         ),
