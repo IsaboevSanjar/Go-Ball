@@ -1,4 +1,4 @@
-package goball.uz.screens
+package goball.uz.screens.start
 
 import android.util.Log
 import android.widget.Toast
@@ -53,7 +53,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import goball.uz.R
-import goball.uz.StadiumsList
 import goball.uz.app.App
 import goball.uz.presentation.StadiumsViewModel
 import goball.uz.ui.theme.fontBold

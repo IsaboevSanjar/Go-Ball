@@ -1,4 +1,4 @@
-package goball.uz.screens.mystadium
+package goball.uz.screens.drawers
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.Arrangement
@@ -35,6 +35,7 @@ import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import goball.uz.R
 import goball.uz.helper.FinishActivityState
+import goball.uz.screens.mystadium.AddStadium
 
 class MyStadiums: Screen {
 

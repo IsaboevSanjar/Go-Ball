@@ -1,4 +1,4 @@
-package goball.uz.screens
+package goball.uz.screens.start
 
 import android.content.Intent
 import android.net.Uri
@@ -25,12 +25,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import goball.uz.R
-import goball.uz.presentation.StadiumsViewModel
 
 class StartScreen : Screen {
     @Composable

@@ -1,4 +1,4 @@
-package goball.uz.screens
+package goball.uz.screens.drawers
 
 import android.annotation.SuppressLint
 import androidx.compose.foundation.Image

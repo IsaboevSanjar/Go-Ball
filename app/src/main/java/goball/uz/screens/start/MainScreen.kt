@@ -1,4 +1,4 @@
-package goball.uz.screens
+package goball.uz.screens.start
 
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult

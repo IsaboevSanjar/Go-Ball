@@ -10,17 +10,15 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import cafe.adriel.voyager.navigator.Navigator
 import dagger.hilt.android.AndroidEntryPoint
 import goball.uz.helper.FinishActivityState
-import goball.uz.screens.AboutUsScreen
-import goball.uz.screens.HelpScreen
-import goball.uz.screens.MainScreen
-import goball.uz.screens.mystadium.MyStadiums
-import goball.uz.screens.SettingsScreen
+import goball.uz.screens.drawers.AboutUsScreen
+import goball.uz.screens.drawers.HelpScreen
+import goball.uz.screens.drawers.MyStadiums
+import goball.uz.screens.drawers.SettingsScreen
 import goball.uz.ui.theme.GoBallTheme
 
 @AndroidEntryPoint
