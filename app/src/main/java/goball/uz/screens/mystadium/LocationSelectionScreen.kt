@@ -25,6 +25,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import cafe.adriel.voyager.core.screen.Screen
+import cafe.adriel.voyager.navigator.LocalNavigator
 import com.yandex.mapkit.MapKitFactory
 import com.yandex.mapkit.geometry.Point
 import com.yandex.mapkit.map.CameraPosition
@@ -36,6 +37,7 @@ class LocationSelectionScreen(private val onLocationSelected: (latitude: Double,
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     override fun Content() {
+        val navigator = LocalNavigator.current
         val context = LocalContext.current
         var mapView by remember { mutableStateOf<MapView?>(null) }
         DisposableEffect(Unit) {
@@ -100,7 +102,7 @@ class LocationSelectionScreen(private val onLocationSelected: (latitude: Double,
                         horizontalArrangement = Arrangement.SpaceBetween
                     ) {
                         Card(
-                            onClick = { /*TODO*/ },
+                            onClick = { navigator?.pop() },
                             shape = RoundedCornerShape(50.dp),
                             modifier = Modifier.size(50.dp),
                             colors = CardDefaults.cardColors(
@@ -110,7 +112,10 @@ class LocationSelectionScreen(private val onLocationSelected: (latitude: Double,
                                 defaultElevation = 10.dp
                             ),
                         ) {
-                            Box(contentAlignment = Alignment.Center, modifier = Modifier.fillMaxSize()) {
+                            Box(
+                                contentAlignment = Alignment.Center,
+                                modifier = Modifier.fillMaxSize()
+                            ) {
                                 Image(
                                     painter = painterResource(id = R.drawable.arrow_back),
                                     contentDescription = "Back Icon",
@@ -129,7 +134,10 @@ class LocationSelectionScreen(private val onLocationSelected: (latitude: Double,
                                 defaultElevation = 10.dp
                             ),
                         ) {
-                            Box(contentAlignment = Alignment.Center ,modifier = Modifier.fillMaxSize()) {
+                            Box(
+                                contentAlignment = Alignment.Center,
+                                modifier = Modifier.fillMaxSize()
+                            ) {
                                 Image(
                                     painter = painterResource(id = R.drawable.current_location),
                                     contentDescription = "Back Icon",
@@ -156,7 +164,11 @@ class LocationSelectionScreen(private val onLocationSelected: (latitude: Double,
                         containerColor = colorResource(id = R.color.primary)
                     )
                 ) {
-                    Text(text = "Tanlash", style = MaterialTheme.typography.titleMedium, modifier = Modifier.padding(11.dp))
+                    Text(
+                        text = "Tanlash",
+                        style = MaterialTheme.typography.titleMedium,
+                        modifier = Modifier.padding(11.dp)
+                    )
                 }
             }
         }
