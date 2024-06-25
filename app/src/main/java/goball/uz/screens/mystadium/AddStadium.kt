@@ -125,6 +125,15 @@ class AddStadium : Screen {
         var selectedImageUris by remember {
             mutableStateOf<List<Uri>>(emptyList())
         }
+        var selectedLatitute by remember {
+            mutableStateOf(0.0)
+        }
+        var selectedLongitute by remember {
+            mutableStateOf(0.0)
+        }
+        var stadiumLocationIsPicked by remember {
+            mutableStateOf(false)
+        }
 
         var pickedStartTime by remember {
             mutableStateOf(LocalTime.NOON)
@@ -140,14 +149,6 @@ class AddStadium : Screen {
                     val minutes = it.toMinutes() % 60
                     String.format("%d soat va  %d minut", hours, minutes)
                 }
-            }
-        }
-
-        val formattedStartTime by remember {
-            derivedStateOf {
-                DateTimeFormatter
-                    .ofPattern("hh:mm")
-                    .format(pickedStartTime)
             }
         }
         var timeStartAlreadyPicked by remember {
@@ -653,7 +654,12 @@ class AddStadium : Screen {
                         )
                         .clickable {
                             navigator?.push(LocationSelectionScreen(onLocationSelected = { lat, lon ->
-                                Toast.makeText(context, "$lat && $lon", Toast.LENGTH_SHORT).show()
+                                Toast
+                                    .makeText(context, "$lat && $lon", Toast.LENGTH_SHORT)
+                                    .show()
+                                selectedLatitute = lat
+                                selectedLongitute = lon
+                                stadiumLocationIsPicked = true
                             }))
                         }
                         .padding(14.dp),
@@ -694,6 +700,15 @@ class AddStadium : Screen {
                         text = "Xaritadan kiritish",
                         style = MaterialTheme.typography.bodySmall,
                         color = MaterialTheme.colorScheme.onBackground
+                    )
+                }
+                if (!stadiumLocationIsPicked) {
+                    Text(
+                        text = "Lat: $selectedLatitute && Lon: $selectedLongitute",
+                        color = colorResource(
+                            id = R.color.primary
+                        ),
+                        style = MaterialTheme.typography.bodySmall
                     )
                 }
             }
@@ -757,13 +772,13 @@ class AddStadium : Screen {
                 }
             },
         ) {
-            Column (modifier=Modifier.fillMaxWidth()){
+            Column(modifier = Modifier.fillMaxWidth()) {
                 // Custom Title
                 Text(
                     text = "Yopilish vaqtini kiriting",
                     style = MaterialTheme.typography.headlineMedium,
                     color = Color.Black,  // Customize this color
-                    modifier=Modifier.padding(16.dp)
+                    modifier = Modifier.padding(16.dp)
                 )
 
                 // TimePicker
@@ -804,13 +819,13 @@ class AddStadium : Screen {
                 }
             },
         ) {
-            Column (modifier=Modifier.fillMaxWidth()){
+            Column(modifier = Modifier.fillMaxWidth()) {
                 // Custom Title
                 Text(
                     text = "Yopilish vaqtini kiriting",
                     style = MaterialTheme.typography.headlineMedium,
                     color = Color.Black,  // Customize this color
-                    modifier=Modifier.padding(16.dp)
+                    modifier = Modifier.padding(16.dp)
                 )
 
                 // TimePicker

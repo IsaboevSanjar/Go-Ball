@@ -192,8 +192,9 @@ class LocationSelectionScreen(private val onLocationSelected: (latitude: Double,
                 Button(
                     onClick = {
                         mapView?.let {
-                            val centerPoint = it.map.cameraPosition.target
+                            val centerPoint = it.mapWindow.map.cameraPosition.target
                             onLocationSelected(centerPoint.latitude, centerPoint.longitude)
+                            navigator?.pop()
                         }
                     },
                     modifier = Modifier

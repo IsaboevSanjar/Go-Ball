@@ -59,18 +59,7 @@ class MainActivity : ComponentActivity() {
         setContent {
             val navigator = LocalNavigator.current
             GoBallTheme {
-
-                Column(modifier = Modifier.fillMaxSize()) {
-                    Button(
-                        onClick = {
-                           navigator?.push(MainScreen())
-                        },
-                        modifier = Modifier
-                            .padding(16.dp)
-                    ) {
-                        Text(text = "Pick photos")
-                    }
-                }
+                Navigator(screen = StartScreen())
                 
 
             }
