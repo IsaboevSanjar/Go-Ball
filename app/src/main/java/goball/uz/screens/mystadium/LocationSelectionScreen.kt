@@ -32,6 +32,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.viewmodel.compose.viewModel
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -51,6 +52,7 @@ class LocationSelectionScreen(private val onLocationSelected: (latitude: Double,
         val navigator = LocalNavigator.current
         val context = LocalContext.current
         var mapView by remember { mutableStateOf<MapView?>(null) }
+        val sharedViewModel: SharedLatLonViewModel = viewModel()
         val fusedLocationProviderClient =
             remember { LocationServices.getFusedLocationProviderClient(context) }
 
@@ -194,6 +196,7 @@ class LocationSelectionScreen(private val onLocationSelected: (latitude: Double,
                         mapView?.let {
                             val centerPoint = it.mapWindow.map.cameraPosition.target
                             onLocationSelected(centerPoint.latitude, centerPoint.longitude)
+                            sharedViewModel.setLocation(centerPoint.latitude, centerPoint.longitude)
                             navigator?.pop()
                         }
                     },

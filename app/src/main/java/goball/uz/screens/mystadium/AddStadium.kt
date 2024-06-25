@@ -41,6 +41,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -57,6 +58,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.PopupProperties
+import androidx.lifecycle.viewmodel.compose.viewModel
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import coil.compose.AsyncImage
@@ -68,6 +70,7 @@ import java.time.Duration
 import java.time.LocalTime
 
 class AddStadium : Screen {
+
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
@@ -109,6 +112,12 @@ class AddStadium : Screen {
     @OptIn(ExperimentalMaterial3Api::class)
     @Composable
     fun AddingProcess(modifier: Modifier) {
+
+        val sharedViewModel: SharedLatLonViewModel = viewModel()
+        val selectedLatitude by sharedViewModel.selectedLatitude.collectAsState()
+        val selectedLongitude by sharedViewModel.selectedLongitude.collectAsState()
+        val locationIsPicked by sharedViewModel.locationIsPicked.collectAsState()
+
         val navigator = LocalNavigator.current
         val context = LocalContext.current
         var textStadiumName by remember { mutableStateOf("") }
@@ -120,15 +129,7 @@ class AddStadium : Screen {
         var selectedImageUris by remember {
             mutableStateOf<List<Uri>>(emptyList())
         }
-        var selectedLatitute by remember {
-            mutableStateOf(0.0)
-        }
-        var selectedLongitude by remember {
-            mutableStateOf(0.0)
-        }
-        var stadiumLocationIsPicked by remember {
-            mutableStateOf(false)
-        }
+
 
         var pickedStartTime by remember {
             mutableStateOf(LocalTime.NOON)
@@ -652,9 +653,7 @@ class AddStadium : Screen {
                                 Toast
                                     .makeText(context, "$lat && $lon", Toast.LENGTH_SHORT)
                                     .show()
-                                selectedLatitute = lat
-                                selectedLongitude = lon
-                                stadiumLocationIsPicked = true
+                                sharedViewModel.setLocation(lat, longitude = lon)
                             }))
                         }
                         .padding(14.dp),
@@ -697,15 +696,15 @@ class AddStadium : Screen {
                         color = MaterialTheme.colorScheme.onBackground
                     )
                 }
-                if (!stadiumLocationIsPicked) {
-                    Text(
-                        text = "Lat: $selectedLatitute && Lon: $selectedLongitude",
-                        color = colorResource(
-                            id = R.color.primary
-                        ),
-                        style = MaterialTheme.typography.bodySmall
-                    )
-                }
+
+                Text(
+                    text = "Lat: $selectedLatitude \n Lon: $selectedLongitude",
+                    color = colorResource(
+                        id = R.color.primary
+                    ),
+                    style = MaterialTheme.typography.bodySmall
+                )
+
             }
             item {
                 Spacer(modifier = Modifier.size(14.dp))
