@@ -865,7 +865,6 @@ class AddStadium : Screen {
                 }
             }
         }
-        // TODO: After selecting time we should show the user the duration of the working hours as a warning 
     }
 
     @Composable
