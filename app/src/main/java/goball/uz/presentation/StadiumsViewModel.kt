@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
+import goball.uz.cache.AppCache
 import goball.uz.helper.Result
 import goball.uz.models.TgToken
 import goball.uz.models.UserData
@@ -90,8 +91,17 @@ class StadiumsViewModel
     private fun handleLoginSuccess(token: TgToken?) {
         // Handle the successful login response here, such as saving the token locally or navigating to another screen.
         if (token?.token?.access_token?.isNotEmpty() == true) {
-            Log.d("TELEGRAMLOGIN", "handleLoginSuccess: ${token.token.access_token}")
-            Log.d("TELEGRAMLOGIN", "User: ${token.user}")
+            AppCache.getHelper().token = token.token.access_token
+            AppCache.getHelper().phoneNumber = token.user.phone_number
+            if (token.user.first_name != null) {
+                if (token.user.last_name != null) {
+                    AppCache.getHelper().fullName =
+                        "${token.user.first_name} ${token.user.last_name}"
+                } else {
+                    AppCache.getHelper().fullName =
+                        token.user.first_name
+                }
+            }
         }
     }
 

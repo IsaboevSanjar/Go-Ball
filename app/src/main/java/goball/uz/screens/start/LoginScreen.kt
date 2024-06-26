@@ -1,5 +1,7 @@
 package goball.uz.screens.start
 
+import android.content.Intent
+import android.net.Uri
 import android.util.Log
 import android.widget.Toast
 import androidx.compose.foundation.background
@@ -56,7 +58,10 @@ import androidx.lifecycle.Observer
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import goball.uz.R
+import goball.uz.Yandex
 import goball.uz.app.App
+import goball.uz.cache.AppCache
+import goball.uz.models.UserData
 import goball.uz.presentation.StadiumsViewModel
 import goball.uz.ui.theme.fontBold
 import kotlinx.coroutines.flow.collectLatest
@@ -68,7 +73,7 @@ class LoginScreen : Screen {
         val navigator = LocalNavigator.current
         val context = LocalContext.current
         val clipboardManager: ClipboardManager = LocalClipboardManager.current
-        var success by remember { mutableStateOf(false) }
+        var success by remember { mutableStateOf(true) }
         var loading by remember { mutableStateOf(false) }
 
         val focusRequester = remember { FocusRequester() }
@@ -95,11 +100,14 @@ class LoginScreen : Screen {
             loginState?.let {
                 // Handle successful login, such as navigating to another screen or showing a success message
                 Toast.makeText(context, "$it", Toast.LENGTH_SHORT).show()
-
+                //AppCache.getHelper().firstOpen = false
+                val intent = Intent(context, Yandex::class.java).apply {
+                    flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                }
+                context.startActivity(intent)
                 loading = false
                 success = true
             } ?: run {
-                success = false
                 loading = false
             }
         }
@@ -121,13 +129,18 @@ class LoginScreen : Screen {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     ClickableText(
                         onClick = { offset ->
+                            val browserIntent = Intent(
+                                Intent.ACTION_VIEW,
+                                Uri.parse("https://t.me/mystadium_bot")
+                            )
+                            context.startActivity(browserIntent)
                             println("You clicked on offset $offset")
                             Log.d("TAGG", "You clicked on offset $offset")
                         },
                         text = buildAnnotatedString {
                             withStyle(
                                 style = SpanStyle(
-                                    color = Color.Green,
+                                    color = colorResource(id = R.color.primary),
                                     fontSize = 17.sp, fontWeight = FontWeight.Bold
                                 ),
                             ) {
@@ -231,6 +244,7 @@ class LoginScreen : Screen {
             LaunchedEffect(key1 = viewModel.showErrorToastChannelLogin) {
                 viewModel.showErrorToastChannelLogin.collectLatest { show ->
                     if (show) {
+                        success = false
                         Toast.makeText(
                             App.instance, "Error", Toast.LENGTH_SHORT
                         ).show()
