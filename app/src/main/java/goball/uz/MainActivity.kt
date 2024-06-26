@@ -1,11 +1,13 @@
 package goball.uz
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import cafe.adriel.voyager.navigator.LocalNavigator
 import cafe.adriel.voyager.navigator.Navigator
 import dagger.hilt.android.AndroidEntryPoint
+import goball.uz.cache.AppCache
 import goball.uz.screens.start.StartScreen
 import goball.uz.ui.theme.GoBallTheme
 
@@ -18,9 +20,12 @@ class MainActivity : ComponentActivity() {
         setContent {
             val navigator = LocalNavigator.current
             GoBallTheme {
-                Navigator(screen = StartScreen())
-                
-
+                if (AppCache.getHelper().firstOpen) {
+                    Navigator(screen = StartScreen())
+                } else {
+                    startActivity(Intent(this, Yandex::class.java))
+                    finish()
+                }
             }
         }
 

@@ -24,6 +24,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -39,6 +40,7 @@ import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.input.key.type
 import androidx.compose.ui.platform.ClipboardManager
 import androidx.compose.ui.platform.LocalClipboardManager
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
@@ -50,6 +52,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.text.isDigitsOnly
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Observer
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
 import goball.uz.R
@@ -59,29 +62,25 @@ import goball.uz.ui.theme.fontBold
 import kotlinx.coroutines.flow.collectLatest
 
 class LoginScreen : Screen {
-
     @Composable
     override fun Content() {
         val viewModel = hiltViewModel<StadiumsViewModel>()
         val navigator = LocalNavigator.current
+        val context = LocalContext.current
         val clipboardManager: ClipboardManager = LocalClipboardManager.current
-        var success by remember {
-            mutableStateOf(true)
-        }
+        var success by remember { mutableStateOf(true) }
+        var loading by remember { mutableStateOf(false) }
 
         val focusRequester = remember { FocusRequester() }
-        var otpText by remember {
-            mutableStateOf("")
-        }
-        var addedText by remember {
-            mutableStateOf("")
-        }
+        var otpText by remember { mutableStateOf("") }
+        var addedText by remember { mutableStateOf("") }
+
+        val loginState by viewModel.login.collectAsState()
+
         if (otpText.length > 4) {
             otpText = ""
         }
-        var loading by remember {
-            mutableStateOf(false)
-        }
+
         LaunchedEffect(Unit) {
             clipboardManager.getText()?.text?.let {
                 if (it.length == 4 && it.isDigitsOnly()) {
@@ -90,6 +89,18 @@ class LoginScreen : Screen {
                 }
             }
             focusRequester.requestFocus()
+        }
+
+        LaunchedEffect(loginState) {
+            loginState?.let {
+                // Handle successful login, such as navigating to another screen or showing a success message
+                Toast.makeText(context, "$it", Toast.LENGTH_SHORT).show()
+                loading = false
+                success = true
+            } ?: run {
+                success = false
+                loading = false
+            }
         }
 
         Column(
@@ -130,7 +141,6 @@ class LoginScreen : Screen {
                 }
                 Spacer(modifier = Modifier.height(40.dp))
                 BasicTextField(
-
                     modifier = Modifier
                         .focusRequester(focusRequester)
                         .onKeyEvent { event ->
@@ -158,14 +168,11 @@ class LoginScreen : Screen {
                         modifier = Modifier.height(50.dp)
                     ) {
                         repeat(4) { index ->
-                            val number = otpText.getOrNull(index)?.toString()
-                                ?: "" // Use getOrNull for safer indexing
-
+                            val number = otpText.getOrNull(index)?.toString() ?: ""
                             Column(
                                 verticalArrangement = Arrangement.spacedBy(6.dp),
                                 horizontalAlignment = Alignment.CenterHorizontally
                             ) {
-
                                 Box(
                                     modifier = Modifier
                                         .height(80.dp)
@@ -174,20 +181,18 @@ class LoginScreen : Screen {
                                             Color.LightGray,
                                             shape = RoundedCornerShape(7.dp)
                                         ),
-                                    contentAlignment = Alignment.Center // This centers the content inside the Box
+                                    contentAlignment = Alignment.Center
                                 ) {
                                     Text(
                                         text = number,
                                         style = MaterialTheme.typography.headlineMedium,
-                                        fontSize = 20.sp, // Adjust this as needed for better readability
+                                        fontSize = 20.sp,
                                         color = Color.Black
                                     )
                                 }
                             }
-
                         }
                     }
-
                 }
                 if (!success) {
                     Text(
@@ -203,8 +208,9 @@ class LoginScreen : Screen {
                     .fillMaxWidth()
                     .padding(horizontal = 17.dp),
                 onClick = {
-                    if (otpText.isNotEmpty()){
+                    if (otpText.isNotEmpty()) {
                         viewModel.loginWithTelegram(otpText.toInt())
+                        loading = true
                     }
                 },
                 shape = RoundedCornerShape(50.dp),
@@ -219,15 +225,15 @@ class LoginScreen : Screen {
                 } else {
                     Text(text = "Loading", style = MaterialTheme.typography.titleMedium)
                 }
-
-
             }
-            LaunchedEffect(key1 = viewModel.showErrorToastChannel) {
-                viewModel.showErrorToastChannel.collectLatest { show ->
+
+            LaunchedEffect(key1 = viewModel.showErrorToastChannelLogin) {
+                viewModel.showErrorToastChannelLogin.collectLatest { show ->
                     if (show) {
                         Toast.makeText(
                             App.instance, "Error", Toast.LENGTH_SHORT
                         ).show()
+                        loading = false
                     }
                 }
             }
@@ -239,4 +245,5 @@ class LoginScreen : Screen {
     fun LoginPage() {
         Content()
     }
+
 }

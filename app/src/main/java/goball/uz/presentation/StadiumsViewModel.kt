@@ -1,16 +1,21 @@
 package goball.uz.presentation
 
 import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import dagger.hilt.android.lifecycle.HiltViewModel
 import goball.uz.helper.Result
 import goball.uz.models.TgToken
+import goball.uz.models.UserData
 import goball.uz.models.staium.StadiumListItem
 import kotlinx.coroutines.channels.Channel
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.collectLatest
+import kotlinx.coroutines.flow.emptyFlow
 import kotlinx.coroutines.flow.receiveAsFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
@@ -23,8 +28,14 @@ class StadiumsViewModel
     private val _stadiums = MutableStateFlow<List<StadiumListItem>>(emptyList())
     val stadiums = _stadiums.asStateFlow()
 
+    private val _login = MutableStateFlow<UserData?>(null)
+    val login: StateFlow<UserData?> get() = _login
+
     private val _showErrorChannel = Channel<Boolean>()
     val showErrorToastChannel = _showErrorChannel.receiveAsFlow()
+
+    private val _showErrorChannelLogin = Channel<Boolean>()
+    val showErrorToastChannelLogin = _showErrorChannelLogin.receiveAsFlow()
 
     private val _isDataFetched = MutableStateFlow(false)
 
@@ -61,11 +72,15 @@ class StadiumsViewModel
             repository.loginWithTelegram(code).collectLatest { result ->
                 when (result) {
                     is Result.Error -> {
-                        _showErrorChannel.send(true)
+                        _showErrorChannelLogin.send(true)
                     }
 
                     is Result.Success -> {
+                        _showErrorChannelLogin.send(false)
                         handleLoginSuccess(result.data)
+                        result.data?.let { userData ->
+                            _login.value = userData.user
+                        }
                     }
                 }
             }
