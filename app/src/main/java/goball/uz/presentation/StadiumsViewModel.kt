@@ -76,6 +76,7 @@ class StadiumsViewModel
         // Handle the successful login response here, such as saving the token locally or navigating to another screen.
         if (token?.token?.access_token?.isNotEmpty() == true) {
             Log.d("TELEGRAMLOGIN", "handleLoginSuccess: ${token.token.access_token}")
+            Log.d("TELEGRAMLOGIN", "User: ${token.user}")
         }
     }
 
