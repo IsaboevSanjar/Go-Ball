@@ -68,7 +68,7 @@ class LoginScreen : Screen {
         val navigator = LocalNavigator.current
         val context = LocalContext.current
         val clipboardManager: ClipboardManager = LocalClipboardManager.current
-        var success by remember { mutableStateOf(true) }
+        var success by remember { mutableStateOf(false) }
         var loading by remember { mutableStateOf(false) }
 
         val focusRequester = remember { FocusRequester() }
@@ -95,6 +95,7 @@ class LoginScreen : Screen {
             loginState?.let {
                 // Handle successful login, such as navigating to another screen or showing a success message
                 Toast.makeText(context, "$it", Toast.LENGTH_SHORT).show()
+
                 loading = false
                 success = true
             } ?: run {
@@ -209,7 +210,7 @@ class LoginScreen : Screen {
                     .padding(horizontal = 17.dp),
                 onClick = {
                     if (otpText.isNotEmpty()) {
-                        viewModel.loginWithTelegram(otpText.toInt())
+                        viewModel.loginWithTelegram(otpText)
                         loading = true
                     }
                 },

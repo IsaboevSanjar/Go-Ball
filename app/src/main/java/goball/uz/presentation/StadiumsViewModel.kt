@@ -67,7 +67,7 @@ class StadiumsViewModel
         }
     }
 
-    fun loginWithTelegram(code: Int) {
+    fun loginWithTelegram(code: String) {
         viewModelScope.launch {
             repository.loginWithTelegram(code).collectLatest { result ->
                 when (result) {

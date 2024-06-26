@@ -36,7 +36,7 @@ class StadiumsRepositoryImpl @Inject constructor(private val api: Api) : Stadium
         }
     }
 
-    override suspend fun loginWithTelegram(code: Int): Flow<Result<TgToken>> {
+    override suspend fun loginWithTelegram(code: String): Flow<Result<TgToken>> {
         return flow {
             val login=try {
                 api.loginTelegram(PasscodeRequest(code))

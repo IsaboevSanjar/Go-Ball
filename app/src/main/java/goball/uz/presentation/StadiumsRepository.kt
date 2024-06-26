@@ -8,5 +8,5 @@ import kotlinx.coroutines.flow.Flow
 interface StadiumsRepository {
     suspend fun getStadiumsList():Flow<Result<List<StadiumListItem>>>
 
-    suspend fun loginWithTelegram(code:Int):Flow<Result<TgToken>>
+    suspend fun loginWithTelegram(code:String):Flow<Result<TgToken>>
 }
