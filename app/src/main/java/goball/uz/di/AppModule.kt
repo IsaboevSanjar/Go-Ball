@@ -6,6 +6,7 @@ import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import goball.uz.app.App
+import goball.uz.cache.AppCache
 import goball.uz.network.Api
 import goball.uz.network.RetrofitInstance
 import goball.uz.presentation.StadiumsRepository
@@ -65,7 +66,7 @@ object AppModule {
             val request = chain.request()
             val builder: Request.Builder = request.newBuilder()
             builder
-                .addHeader("Authorization", "Bearer {AppCache.getHelper().token}")
+                .addHeader("Authorization", "Bearer ${AppCache.getHelper().token}")
             val response = chain.proceed(builder.build())
             response
         }
