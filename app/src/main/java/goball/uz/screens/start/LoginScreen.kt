@@ -237,7 +237,7 @@ class LoginScreen : Screen {
                 if (!loading) {
                     Text(text = "Tasdiqlash", style = MaterialTheme.typography.titleMedium)
                 } else {
-                    Text(text = "Loading", style = MaterialTheme.typography.titleMedium)
+                    Text(text = "Tekshirmoqda", style = MaterialTheme.typography.titleMedium)
                 }
             }
 
