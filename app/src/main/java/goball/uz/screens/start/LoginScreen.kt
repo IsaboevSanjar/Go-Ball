@@ -99,12 +99,11 @@ class LoginScreen : Screen {
         LaunchedEffect(loginState) {
             loginState?.let {
                 // Handle successful login, such as navigating to another screen or showing a success message
-                Toast.makeText(context, "$it", Toast.LENGTH_SHORT).show()
-                //AppCache.getHelper().firstOpen = false
                 val intent = Intent(context, Yandex::class.java).apply {
                     flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
                 }
                 context.startActivity(intent)
+                AppCache.getHelper().firstOpen = false
                 loading = false
                 success = true
             } ?: run {

@@ -48,11 +48,16 @@ class Yandex : AppCompatActivity() {
     private val long = 69.2401
     private var stadiumsCount = 0
 
+    companion object{
+        init {
+            MapKitFactory.setApiKey("42c1c9b7-5b9f-4fc3-92f0-efcc45ec8dd6")
+        }
+    }
 
     @SuppressLint("UseCompatLoadingForDrawables")
     override fun onCreate(savedInstanceState: Bundle?) {
-        MapKitFactory.setApiKey("42c1c9b7-5b9f-4fc3-92f0-efcc45ec8dd6")
         super.onCreate(savedInstanceState)
+        MapKitFactory.initialize(this)
         // Make the app content extend into the system bars
         WindowCompat.setDecorFitsSystemWindows(window, false)
         // Hide the system bars
@@ -64,7 +69,6 @@ class Yandex : AppCompatActivity() {
         val view = binding.root
         headerBinding = NavHeaderBinding.bind(binding.navigationView.getHeaderView(0))
         setContentView(view)
-        MapKitFactory.initialize(this)
         setUpToolbar()
         mapView = binding.mapview
         showMap(mapView)

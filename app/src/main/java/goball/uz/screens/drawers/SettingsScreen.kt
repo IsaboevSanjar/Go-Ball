@@ -1,6 +1,7 @@
 package goball.uz.screens.drawers
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -11,17 +12,15 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.outlined.KeyboardArrowDown
 import androidx.compose.material.icons.outlined.KeyboardArrowUp
 import androidx.compose.material.icons.rounded.Check
-import androidx.compose.material3.Button
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -37,6 +36,7 @@ import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -44,6 +44,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.input.KeyboardType
@@ -52,10 +53,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.PopupProperties
 import cafe.adriel.voyager.core.screen.Screen
 import cafe.adriel.voyager.navigator.LocalNavigator
+import goball.uz.MainActivity
 import goball.uz.R
+import goball.uz.Yandex
 import goball.uz.cache.AppCache
 import goball.uz.helper.FinishActivityState
-import goball.uz.screens.mystadium.AddStadium
 
 class SettingsScreen() : Screen {
     @SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
@@ -65,8 +67,19 @@ class SettingsScreen() : Screen {
         var textStadiumPhoneNumber by remember { mutableStateOf("+998 ${AppCache.getHelper().phoneNumber}") }
         var textFullName by remember { mutableStateOf(AppCache.getHelper().fullName) }
         val navigator = LocalNavigator.current
+        val context = LocalContext.current
         val options = listOf("O'zbek", "English", "Русский")
         var selectedOptionText by remember { mutableStateOf(options[0]) }
+        val openSavingDialog = remember { mutableStateOf(false) }
+        val openLogOutDialog = remember { mutableStateOf(false) }
+        val openDeleteAccountDialog = remember { mutableStateOf(false) }
+        val openDialogExiting = remember { mutableStateOf(false) }
+        var isChanged by remember {
+            mutableStateOf(false)
+        }
+        if (!textFullName.equals(AppCache.getHelper().fullName)) {
+            isChanged = true
+        }
         Scaffold(modifier = Modifier.fillMaxSize(),
             topBar = {
                 TopAppBar(title = {
@@ -78,9 +91,13 @@ class SettingsScreen() : Screen {
                 },
                     navigationIcon = {
                         IconButton(onClick = {
-                            FinishActivityState.shouldFinish.value = true
+                            if (isChanged) {
+                                openSavingDialog.value = true
+                                openDialogExiting.value = true
+                            } else {
+                                FinishActivityState.shouldFinish.value = true
+                            }
                         }) {
-
                             Icon(
                                 painter = painterResource(id = R.drawable.arrow_back),
                                 contentDescription = "Go back",
@@ -89,9 +106,16 @@ class SettingsScreen() : Screen {
                         }
                     },
                     actions = {
-                        IconButton(onClick = { /*TODO*/ }) {
-                            Icon(imageVector = Icons.Rounded.Check, contentDescription ="Save changes", tint = Color.Black)
+                        if (isChanged) {
+                            IconButton(onClick = { openSavingDialog.value = true }) {
+                                Icon(
+                                    imageVector = Icons.Rounded.Check,
+                                    contentDescription = "Save changes",
+                                    tint = Color.Black
+                                )
+                            }
                         }
+
                     }
                 )
             }
@@ -141,7 +165,7 @@ class SettingsScreen() : Screen {
                                 focusedIndicatorColor = Color.Transparent,
                                 disabledIndicatorColor = Color.Transparent,
                                 containerColor = Color.Transparent,
-                                cursorColor = Color.Gray
+                                cursorColor = Color.Gray,
                             ),
                             maxLines = 1,
                             keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Text),
@@ -212,7 +236,7 @@ class SettingsScreen() : Screen {
                             .fillMaxWidth()
                             .padding(horizontal = 17.dp),
                         onClick = {
-
+                            openLogOutDialog.value = true
                         },
                         shape = RoundedCornerShape(50.dp),
                         colors = ButtonDefaults.buttonColors(
@@ -224,7 +248,11 @@ class SettingsScreen() : Screen {
                         Text(text = "Chiqish", style = MaterialTheme.typography.titleMedium)
                     }
                     Text(
-                        modifier = Modifier.padding(16.dp),
+                        modifier = Modifier
+                            .padding(16.dp)
+                            .clickable {
+                                openDeleteAccountDialog.value = true
+                            },
                         text = "Akkountni o'chirish",
                         color = Color.Red,
                         style = MaterialTheme.typography.titleMedium,
@@ -233,8 +261,149 @@ class SettingsScreen() : Screen {
                 }
             }
         }
-
-
+        if (openSavingDialog.value) {
+            AlertDialog(
+                onDismissRequest = { openSavingDialog.value = false },
+                title = {
+                    Text(
+                        text = "O'zgarishlar saqlansinmi?",
+                        style = MaterialTheme.typography.headlineMedium,
+                        color = Color.Black
+                    )
+                },
+                confirmButton = {
+                    Text(
+                        modifier = Modifier
+                            .clickable {
+                                isChanged = false
+                                openSavingDialog.value = false
+                                AppCache.getHelper().fullName = textFullName
+                                if (openDialogExiting.value) {
+                                    FinishActivityState.shouldFinish.value = true
+                                }
+                            },
+                        text = "Saqlash",
+                        color = colorResource(id = R.color.primary),
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                },
+                dismissButton = {
+                    Text(
+                        modifier = Modifier
+                            .clickable {
+                                openSavingDialog.value = false
+                                if (openDialogExiting.value) {
+                                    FinishActivityState.shouldFinish.value = true
+                                }
+                            }
+                            .padding(end = 7.dp),
+                        text = "Bekor qilish",
+                        color = Color.Red,
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                },
+                text = {
+                    Text(
+                        "Siz sozlamalar uchun qilingan o'zgarishlar saqlashni xohlaysizmi?",
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                }
+            )
+        }
+        else if (openLogOutDialog.value) {
+            AlertDialog(
+                onDismissRequest = { openSavingDialog.value = false },
+                title = {
+                    Text(
+                        text = "Akkountingizdan chiqib ketmoqdasiz?",
+                        style = MaterialTheme.typography.headlineMedium,
+                        color = Color.Black
+                    )
+                },
+                confirmButton = {
+                    Text(
+                        modifier = Modifier
+                            .clickable {
+                                openLogOutDialog.value = false
+                            },
+                        text = "Bekor qilish",
+                        color = colorResource(id = R.color.primary),
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                },
+                dismissButton = {
+                    Text(
+                        modifier = Modifier
+                            .clickable {
+                                openSavingDialog.value = false
+                                AppCache.getHelper().firstOpen = true
+                                val intent = Intent(context, MainActivity::class.java).apply {
+                                    flags =
+                                        Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                }
+                                context.startActivity(intent)
+                            }
+                            .padding(end = 7.dp),
+                        text = "Chiqish",
+                        color = Color.Red,
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                },
+                text = {
+                    Text(
+                        "Siz akkountingizdan chiqasiz va qaytib kirish imkoni bo'ladi!",
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                }
+            )
+        }
+        else if (openDeleteAccountDialog.value) {
+            AlertDialog(
+                onDismissRequest = { openSavingDialog.value = false },
+                title = {
+                    Text(
+                        text = "Akkountingizni o'chirasizmi?",
+                        style = MaterialTheme.typography.headlineMedium,
+                        color = Color.Black
+                    )
+                },
+                confirmButton = {
+                    Text(
+                        modifier = Modifier
+                            .clickable {
+                                openDeleteAccountDialog.value = false
+                            },
+                        text = "Bekor qilish",
+                        color = colorResource(id = R.color.primary),
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                },
+                dismissButton = {
+                    Text(
+                        modifier = Modifier
+                            .clickable {
+                                openDeleteAccountDialog.value = false
+                                AppCache.getHelper().firstOpen = true
+                                val intent = Intent(context, MainActivity::class.java).apply {
+                                    flags =
+                                        Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+                                }
+                                context.startActivity(intent)
+                            }
+                            .padding(end = 7.dp),
+                        text = "O'chirish",
+                        color = Color.Red,
+                        style = MaterialTheme.typography.titleMedium
+                    )
+                },
+                text = {
+                    Text(
+                        "Siz akkountingizni o'chirsangiz bazadagi ma'lumotlaringiz o'chadi!",
+                        style = MaterialTheme.typography.bodySmall
+                    )
+                }
+            )
+        }
     }
 
     @Composable
